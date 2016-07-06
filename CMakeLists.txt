@@ -27,6 +27,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 # build the 'common' static library (and include our protobuf messages in it)
 add_library(common STATIC ${COMMON_SRC} git_version.cpp)
 target_link_libraries(common proto_messages)
+
+# TODO Remove qt from common if possible
+find_package(Qt5Widgets REQUIRED)
 qt5_use_modules(common Core Network Widgets)
 
 
