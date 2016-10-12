@@ -39,6 +39,7 @@ find_package(Git REQUIRED)
 file(WRITE ${CMAKE_BINARY_DIR}/git_version.cpp.in
     "#include <git_version.hpp>\n"
     "const char *git_version_hash = \"@GIT_HASH@\";\n"
+    "const char *git_version_short_hash = \"@GIT_SHORT_HASH@\";\n"
     "const char *git_head_date = \"@GIT_DATE@\";\n"
     "const char *git_head_author = \"@GIT_AUTHOR@\";\n"
     "const bool git_version_dirty = (bool)@GIT_DIRTY@;\n"
@@ -48,6 +49,11 @@ file(WRITE ${CMAKE_BINARY_DIR}/version.cmake
     "EXECUTE_PROCESS(
         COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
         OUTPUT_VARIABLE GIT_HASH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    EXECUTE_PROCESS(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        OUTPUT_VARIABLE GIT_SHORT_HASH
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     EXECUTE_PROCESS(
