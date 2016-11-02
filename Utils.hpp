@@ -36,6 +36,12 @@ inline void debugThrow(const std::string& string) {
     debugThrow(std::runtime_error(string));
 }
 
+inline void debugThrowIf(const std::string& string, bool condition) {
+    if (condition) {
+        debugThrow(std::runtime_error(string));
+    }
+}
+
 /**
  * @brief Restricts the given angle to be between pi and -pi
  *
