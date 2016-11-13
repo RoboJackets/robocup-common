@@ -14,7 +14,7 @@ typedef std::chrono::duration<double> Seconds;
 
 
 template <class Duration>
-constexpr auto numMicroseconds(Duration d) {
+constexpr int64_t numMicroseconds(Duration d) {
     return std::chrono::duration_cast<std::chrono::microseconds>(d).count();
 }
 
@@ -39,7 +39,7 @@ constexpr  RJ::Timestamp SecsToTimestamp(double secs) {
 }
 
 template <class Duration>
-constexpr auto numSeconds(Duration d) {
+constexpr double numSeconds(Duration d) {
     std::chrono::duration<double> seconds = d;
     return seconds.count();
 }
