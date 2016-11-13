@@ -6,7 +6,7 @@
 namespace RJ {
 
 /// type for storing time in microseconds
-typedef std::chrono::steady_clock::time_point Time;
+typedef std::chrono::system_clock::time_point Time;
 typedef uint64_t Timestamp;
 typedef std::chrono::duration<float> Seconds;
 /** returns the local system timestamp in microseconds */
@@ -18,10 +18,9 @@ constexpr auto numMicroseconds(Duration d) {
 }
 
 inline Time now() {
-    auto time_point = std::chrono::steady_clock::now();
+    return std::chrono::system_clock::now();
     //struct timeval time;
     //gettimeofday(&time, nullptr);
-    return time_point;
     //return (Time)time.tv_sec * 1000000 + (Time)time.tv_usec;
 }
 
@@ -40,7 +39,7 @@ constexpr  RJ::Timestamp SecsToTimestamp(double secs) {
 
 template <class Duration>
 constexpr auto numSeconds(Duration d) {
-    std::chrono::duration<float> seconds = d;
+    std::chrono::duration<double> seconds = d;
     return seconds.count();
 }
 
