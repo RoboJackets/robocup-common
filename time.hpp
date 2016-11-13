@@ -2,13 +2,14 @@
 
 #include <sys/time.h>
 #include <chrono>
+#include <string>
 
 namespace RJ {
 
 /// type for storing time in microseconds
 typedef std::chrono::system_clock::time_point Time;
 typedef uint64_t Timestamp;
-typedef std::chrono::duration<float> Seconds;
+typedef std::chrono::duration<double> Seconds;
 /** returns the local system timestamp in microseconds */
 
 
@@ -49,3 +50,15 @@ constexpr float TimestampToSecs(RJ::Timestamp timestamp) {
 }
 
 }  // namespace RJ
+
+inline RJ::Time operator+(const RJ::Time &time, const RJ::Seconds& sec) {
+    return time + std::chrono::duration_cast<RJ::Time::duration>(sec);
+}
+
+inline RJ::Time operator-(const RJ::Time &time, const RJ::Seconds& sec) {
+    return time - std::chrono::duration_cast<RJ::Time::duration>(sec);
+}
+
+inline std::string to_string(RJ::Seconds seconds) {
+    return std::to_string(seconds.count()) + "(Seconds)";
+}
