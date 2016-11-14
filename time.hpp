@@ -4,6 +4,8 @@
 #include <chrono>
 #include <string>
 
+using namespace std::chrono_literals;
+
 namespace RJ {
 
 /// type for storing time in microseconds
@@ -61,4 +63,10 @@ inline RJ::Time operator-(const RJ::Time &time, const RJ::Seconds& sec) {
 
 inline std::string to_string(RJ::Seconds seconds) {
     return std::to_string(seconds.count()) + "(Seconds)";
+}
+
+inline std::ostream& operator<<(std::ostream& os, RJ::Seconds seconds)
+{
+    os << to_string(seconds);
+    return os;
 }
