@@ -8,7 +8,7 @@ namespace RJ {
 
 /// type for storing time in microseconds
 typedef std::chrono::system_clock::time_point Time;
-typedef uint64_t Timestamp;
+typedef int64_t Timestamp; //Time in microseconds
 typedef std::chrono::duration<double> Seconds;
 /** returns the local system timestamp in microseconds */
 
