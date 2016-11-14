@@ -42,8 +42,7 @@ constexpr  RJ::Timestamp SecsToTimestamp(double secs) {
 
 template <class Duration>
 constexpr double numSeconds(Duration d) {
-    std::chrono::duration<double> seconds = d;
-    return seconds.count();
+    return std::chrono::duration<double>(d).count();
 }
 
 /// Converts an integer timestamp in microseconds to a decimal number of seconds
