@@ -1,4 +1,6 @@
 // Each UDP packet contains one of these messages.
+syntax="proto2";
+
 message SSL_Referee {
 	// The UNIX timestamp when the packet was sent, in microseconds.
 	// Divide by 1,000,000 to get a time_t.

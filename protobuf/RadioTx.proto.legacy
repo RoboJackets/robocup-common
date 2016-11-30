@@ -1,4 +1,6 @@
 // Packet going out from control program to radio program
+syntax="proto2";
+
 message RadioTx
 {
     message Robot
