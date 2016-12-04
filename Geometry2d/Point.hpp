@@ -12,17 +12,17 @@ Simple class to represent a point in 2d space. Uses floating point coordinates
 */
 class Point {
 public:
-    const float& x() const { return _x; }
-    const float& y() const { return _y; }
-    float& x() { return _x; }
-    float& y() { return _y; }
+    const double& x() const { return _x; }
+    const double& y() const { return _y; }
+    double& x() { return _x; }
+    double& y() { return _y; }
 
     /**
     sets the point to x,y
     @param x the x coordinate
     @param y the y coordinate
     */
-    Point(float x = 0, float y = 0) : _x(x), _y(y) {}
+    Point(double x = 0, double y = 0) : _x(x), _y(y) {}
 
     /**
      * Implicit constructor for creating a Point from a Packet::Point
@@ -113,7 +113,7 @@ public:
      * see operator*
      * this modifies the value instead of returning a new value
      */
-    Point& operator*=(float s) {
+    Point& operator*=(double s) {
         x() *= s;
         y() *= s;
 
@@ -124,7 +124,7 @@ public:
      * see operator/
      * this modifies the value instead of returning a new value
      */
-    Point& operator/=(float s) {
+    Point& operator/=(double s) {
         x() /= s;
         y() /= s;
 
@@ -135,12 +135,12 @@ public:
      * adds the / operator for vectors
      *  scalar division
      */
-    Point operator/(float s) const { return Point(x() / s, y() / s); }
+    Point operator/(double s) const { return Point(x() / s, y() / s); }
     /**
      * adds the * operator for vectors
      * scalar multiplication
      */
-    Point operator*(float s) const { return Point(x() * s, y() * s); }
+    Point operator*(double s) const { return Point(x() * s, y() * s); }
 
     /**
      * compares two points to see if both x and y are the same
@@ -163,27 +163,27 @@ public:
     @param p the second point
     @return the dot product of the two
     */
-    float dot(Point p) const { return x() * p.x() + y() * p.y(); }
+    double dot(Point p) const { return x() * p.x() + y() * p.y(); }
 
     /**
     computes the magnitude of the point, as if it were a vector
     @return the magnitude of the point
     */
-    float mag() const { return sqrtf(x() * x() + y() * y()); }
+    double mag() const { return sqrtf(x() * x() + y() * y()); }
 
     /**
     computes magnitude squared
     this is faster than mag()
     @return the magnitude squared
     */
-    float magsq() const { return x() * x() + y() * y(); }
+    double magsq() const { return x() * x() + y() * y(); }
 
     /**
      * @brief Restricts the point to a given magnitude
      * @param max The magnitude to restrict the vector
      */
-    Point& clamp(float max) {
-        float ratio = mag() / max;
+    Point& clamp(double max) {
+        double ratio = mag() / max;
         if (ratio > 1) {
             x() /= ratio;
             y() /= ratio;
@@ -197,7 +197,7 @@ public:
     @param origin the point to rotate around
     @param angle the angle in radians
     */
-    Point& rotate(const Point& origin, float angle) {
+    Point& rotate(const Point& origin, double angle) {
         *this -= origin;
         rotate(angle);
         *this += origin;
@@ -207,9 +207,9 @@ public:
     /**
     * rotates the point around the origin
     */
-    Point& rotate(float angle) {
-        float newX = x() * cos(angle) - y() * sin(angle);
-        float newY = y() * cos(angle) + x() * sin(angle);
+    Point& rotate(double angle) {
+        double newX = x() * cos(angle) - y() * sin(angle);
+        double newY = y() * cos(angle) + x() * sin(angle);
         x() = newX;
         y() = newY;
         return *this;
@@ -218,23 +218,23 @@ public:
     /**
      * Like rotate(), but returns a new point instead of changing *this
      */
-    Point rotated(float angle) const {
-        float newX = x() * cos(angle) - y() * sin(angle);
-        float newY = y() * cos(angle) + x() * sin(angle);
+    Point rotated(double angle) const {
+        double newX = x() * cos(angle) - y() * sin(angle);
+        double newY = y() * cos(angle) + x() * sin(angle);
         return Point(newX, newY);
     }
 
     /**
      * Returns a new Point rotated around the origin
      */
-    Point rotated(const Point& origin, float angle) const {
+    Point rotated(const Point& origin, double angle) const {
         return rotated(*this, origin, angle);
     }
 
     /**
     * static function to use rotate
     */
-    static Point rotated(const Point& pt, const Point& origin, float angle) {
+    static Point rotated(const Point& pt, const Point& origin, double angle) {
         Point newPt = pt;
         newPt.rotate(origin, angle);
         return newPt;
@@ -245,7 +245,7 @@ public:
     @param other the point to find the distance to
     @return the distance between the points
     */
-    float distTo(const Point& other) const {
+    double distTo(const Point& other) const {
         Point delta = other - *this;
         return delta.mag();
     }
@@ -256,8 +256,8 @@ public:
     * unless this vector is zero.
     * If the vector is (0,0), Point(0,0) is returned
     */
-    Point normalized(float magnitude = 1.0) const {
-        float m = mag();
+    Point normalized(double magnitude = 1.0) const {
+        double m = mag();
         if (m == 0) {
             return Point(0, 0);
         }
@@ -272,19 +272,19 @@ public:
     * Returns true if this point is within the given distance (threshold) of
     * (pt)
     */
-    bool nearPoint(const Point& other, float threshold) const {
+    bool nearPoint(const Point& other, double threshold) const {
         return (*this - other).magsq() <= (threshold * threshold);
     }
 
     /**
     * Returns the angle of this point in radians CCW from +X.
     */
-    float angle() const { return atan2(y(), x()); }
+    double angle() const { return atan2(y(), x()); }
 
     /**
     * Returns a unit vector in the given direction (in radians)
     */
-    static Point direction(float theta) {
+    static Point direction(double theta) {
         return Point(cos(theta), sin(theta));
     }
 
@@ -295,22 +295,22 @@ public:
     Point perpCCW() const { return Point(-y(), x()); }
 
     /** saturates the magnitude of a vector */
-    static Geometry2d::Point saturate(Geometry2d::Point value, float max) {
-        float mag = value.mag();
+    static Geometry2d::Point saturate(Geometry2d::Point value, double max) {
+        double mag = value.mag();
         if (mag > fabs(max)) {
             return value.normalized() * fabs(max);
         }
         return value;
     }
 
-    float angleTo(const Point& other) const { return (other - *this).angle(); }
+    double angleTo(const Point& other) const { return (other - *this).angle(); }
 
-    float cross(const Point& other) const {
+    double cross(const Point& other) const {
         return x() * other.y() - y() * other.x();
     }
 
     /** returns the angle between the two normalized points (radians) */
-    float angleBetween(const Point& other) const {
+    double angleBetween(const Point& other) const {
         return acos(normalized().dot(other.normalized()));
     }
 
@@ -328,7 +328,7 @@ public:
     }
 
 private:
-    float _x, _y;
+    double _x, _y;
 };  // \class Point
 
 // global operations
@@ -337,7 +337,7 @@ private:
  * adds the * operator for vectors
  * scalar multiplication
  */
-inline Point operator*(const float& s, const Point& pt) {
+inline Point operator*(const double& s, const Point& pt) {
     return Point(pt.x() * s, pt.y() * s);
 }
 }
