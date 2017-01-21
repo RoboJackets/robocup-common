@@ -29,7 +29,19 @@ add_library(common STATIC ${COMMON_SRC} git_version.cpp)
 target_link_libraries(common proto_messages)
 
 # TODO Remove qt from common if possible
-find_package(Qt5Widgets REQUIRED)
+if(APPLE)
+    # look for the homebrew-installed version of Qt5
+    find_package(Qt5Widgets
+        REQUIRED
+        PATHS /usr/local/Cellar/qt5/*)
+
+    # this directory is included by default, but we mark it as SYSTEM so
+    # warnings in external headers don't show up every time we build
+    include_directories(SYSTEM /usr/local/include/)
+
+else()
+    find_package(Qt5Widgets REQUIRED)
+endif()
 qt5_use_modules(common Core Network Widgets)
 
 
