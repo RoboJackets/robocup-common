@@ -15,6 +15,7 @@ set(COMMON_SRC
     "Geometry2d/Segment.cpp"
     "multicast.cpp"
     "Pid.cpp"
+    "pidTuner.cpp"
     "Utils.cpp"
 )
 

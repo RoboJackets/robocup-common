@@ -1,3 +1,4 @@
+
 #include "Pid.hpp"
 
 #include <cmath>
@@ -55,3 +56,26 @@ void Pid::clearWindup() {
     _errSum = 0;
     std::fill(_oldErr.begin(), _oldErr.end(), 0);
 }
+
+void Pid::initialize_tuner(){
+    _tuner = new pidTuner(kp,ki,kd);
+}
+
+void Pid::start_cycle(){
+    _tuner->start_cycle();
+    kp = _tuner->getP();
+    ki = _tuner->getI();
+    kd = _tuner->getD();
+}
+
+void Pid::run(){
+    _tuner->run(_lastErr);
+}
+
+bool Pid::end_cycle(){
+    return _tuner->end_cycle();
+}
+
+
+
+

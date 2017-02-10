@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
+#include "pidTuner.hpp"
 
 class Pid {
 public:
+
     Pid(float p = 0, float i = 0, float d = 0, unsigned int windup = 0);
 
     unsigned int windup() const { return _windup; }
@@ -15,11 +17,18 @@ public:
     /** clear any windup */
     void clearWindup();
 
+
+    //tuner stuff
+    void initialize_tuner();
+
+    void start_cycle();
+    void run();
+    bool end_cycle();
+
+
     float kp, ki, kd;
 
 private:
-    Pid(Pid&);
-    Pid& operator&=(Pid&);
 
     /** amount to sum up */
     unsigned int _windup;
@@ -31,4 +40,6 @@ private:
     float _lastErr;
 
     std::vector<float> _oldErr;
+
+    pidTuner* _tuner;
 };
