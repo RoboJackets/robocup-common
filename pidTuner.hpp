@@ -4,7 +4,7 @@
 class pidTuner {
 public:
 
-    pidTuner(float ip, float ii, float id, float Sp=1, float Si=.1, float Sd=.05);
+    pidTuner(float ip, float ii, float id, float Sp=.5, float Si=.05, float Sd=.01);
 
     void start_cycle();
     void run(float err);
@@ -27,11 +27,17 @@ private:
     pid_set _initial_pid;
     pid_set _current_pid;
 
+    pid_set _hill_vector;
+
     int _cycles;
 
     float _pScale;
     float _iScale;
     float _dScale;
+
+    float _errThreshold;
+
+    float _minScore;
 
     std::vector <pid_set> _pid_sets;
 
