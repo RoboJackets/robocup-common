@@ -96,7 +96,7 @@ struct RobotStatusMessage {
     // robot charged?
     unsigned kickStatus:1;
 
-    // 0 = good, 1 = not initialized, 2 = error
+    // 0 = good, 1 = bad
     unsigned fpgaStatus:1;
 } __attribute__((packed));
 
