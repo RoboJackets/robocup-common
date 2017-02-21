@@ -88,14 +88,17 @@ struct RobotStatusMessage {
     static constexpr float BATTERY_READING_SCALE_FACTOR = 0.09884;
     uint8_t battVoltage;
 
-    uint8_t ballSenseStatus : 2;
-
     // 1 bit for each motor - 1 = error, 0 = good
-    uint8_t motorErrors:5;
+    unsigned  motorErrors:5;
 
-    // 0 = good, 1 = not initialized, 2 = error
-    uint8_t fpgaStatus:2;
-};
+    unsigned ballSenseStatus : 1;
+
+    // robot charged?
+    unsigned kickStatus:1;
+
+    // 0 = good, 1 = bad
+    unsigned fpgaStatus:1;
+} __attribute__((packed));
 
 /**
  * @brief Real-Time packet definition
