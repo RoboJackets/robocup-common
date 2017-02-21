@@ -2,13 +2,19 @@
 #include <iostream>
 #include <math.h>
 
+
 pidTuner::pidTuner(float ip, float ii, float id, float Sp, float Si, float Sd){
     _initial_pid = pid_set(ip,ii,id);
+    _current_pid =  _initial_pid;
+    _hill_vector = pid_set(1,1,1);
+
     _cycles = 0;
+    _test_num = 0;
 
     _pScale = Sp;
     _iScale = Si;
     _dScale = Sd;
+    _overScale = 1;
 
     _errThreshold = .1;
 }
@@ -21,74 +27,89 @@ pidTuner::pid_set::pid_set(float ip, float ii, float id){
 }
 
 void pidTuner::start_cycle(){
-    //std::cout<<"C++: Start Cycle"<<std::endl;
+    //determine values to test
+    if(_test_num==_test_sets.size()){
+         _test_sets.clear();
 
-    pid_set _pid = pid_set(_initial_pid.p,_initial_pid.i,_initial_pid.d);
+        for(int i=0;i<4;i++){
+            pid_set _pid = pid_set(_current_pid.p,_current_pid.i,_current_pid.d);
 
-    std::cout<<_cycles<<std::endl;
-    switch(_cycles){
-        case 0:
-            std::cout<<"0"<<std::endl;
-            break;
-        case 1:
-            _pid.p += _pScale;
-            std::cout<<"p"<<std::endl;
-            break;
-        case 2:
-            _pid.i += _iScale;
-            std::cout<<"i"<<std::endl;
-            break;
-        case 3:
-            _pid.d += _dScale;
-            std::cout<<"d"<<std::endl;
-            break;
-        default:
-            std::cout<<"default"<<std::endl;
-            _pid = pid_set(_current_pid.p,_current_pid.i,_current_pid.d);
-            _pid.p += _hill_vector.p * _pScale;
-            _pid.i += _hill_vector.i * _iScale;
-            _pid.d += _hill_vector.d * _dScale;
+            switch(i){
+                case 0:
+                    break;
+                case 1:
+                    _pid.p += _pScale;
+                    break;
+                case 2:
+                    _pid.i += _iScale;
+                    break;
+                case 3:
+                    _pid.d += _dScale;
+                    break;
+                }
+                std::cout<<_pid.p<<" "<<_pid.i<<" "<<_pid.d<<std::endl;
+                _test_sets.push_back(_pid);
+        }
+
+        _test_num = 0;
+        if(_cycles != 0){
+            //we have data on the initial value already
+            _test_sets[0] = _current_pid;
+            _test_num++;
+        }
     }
-
-    std::cout<<"pid: "<<_pid.p<<" , "<<_pid.i<<" , "<<_pid.d<<std::endl;
-    _current_pid = _pid;
+    _current_pid = _test_sets[_test_num];
 }
 
 void pidTuner::run(float err){
-    _current_pid.score+=fabs(err);
+    _current_pid.score += fabs(err);
 }
 
-//cleans up and returns if pid needs more tuning
+//returns if pid needs more tuning, if it does, sets up next test points
 bool pidTuner::end_cycle(){
-    //std::cout<<"C++: End CYCLE: "<<_current_pid.score<<std::endl;
-    _pid_sets.push_back(_current_pid);
-    _cycles+=1;
-    std::cout<<"end : "<<_cycles<<" : "<<_current_pid.score<<std::endl;
+    //score old value
+    _test_sets[_test_num] = _current_pid;
+    std::cout<<"test set #"<<_test_num<<" set to: "<<_current_pid.score<<std::endl;
 
-    if(_current_pid.score > _errThreshold){
-        if(_cycles==1){
-            _initial_pid.score = _current_pid.score;
-            _minScore = _current_pid.score;
+    _test_num += 1;
+
+    if(_test_num==_test_sets.size()){
+        //finished testing set, determine best pid, then check if we need more tests
+        _cycles+=1;
+
+
+        pid_set _best_pid = _test_sets[0];
+        for(int i=0; i<_test_sets.size();i++){
+            if(_test_sets[i].score<_current_pid.score){
+                _best_pid = _test_sets[i];
+            }
+        }
+
+        std::cout<<"best pid: "<<_best_pid.p<<" "<<_best_pid.i<<" "<<_best_pid.d<<" : "<<_best_pid.score<<std::endl;
+
+        if(_best_pid == _test_sets[0]){
+            std::cout<<"Reverse"<<std::endl;
+            _overScale = 2;
         }
         else{
-            if(_current_pid.score < _minScore){
-                _minScore = _current_pid.score;
-            }
-            if(_cycles==4){
-                float vp = _initial_pid.score > _pid_sets[1].score ? 1 : -1;
-                float vi = _initial_pid.score > _pid_sets[2].score ? 1 : -1;
-                float vd = _initial_pid.score > _pid_sets[3].score ? 1 : -1;
-                _hill_vector = pid_set(vp,vi,vd);
-                _current_pid = _initial_pid;
-
-                for(int i = 0; i<4; i++){
-                    std::cout<<i<<": "<<_pid_sets[i].p<<" , "<<_pid_sets[i].i<<" , "<<_pid_sets[i].d<<" : "<<_pid_sets[i].score<<std::endl;
-                }
-                std::cout<<"HILL: "<<vp<<" , "<<vi<<" , "<<vd<<std::endl;
-            }
+            _overScale = 1;
         }
+
+        //this may not be helpful
+        _pScale *= _test_sets[0].score > _test_sets[1].score ? 1 : -1/_overScale;
+        _iScale *= _test_sets[0].score > _test_sets[2].score ? 1 : -1/_overScale;
+        _dScale *= _test_sets[0].score > _test_sets[3].score ? 1 : -1/_overScale;
+
+        _current_pid.p = _test_sets[0].p + _pScale;
+        _current_pid.i = _test_sets[0].i + _iScale;
+        _current_pid.d = _test_sets[0].d + _dScale;
+
+        std::cout<<"HILL: "<<_pScale<<" "<<_iScale<<" "<<_dScale<<std::endl;
 
         return true;
     }
-    return false;
+    else{
+        //keep testing
+        return true;
+    }
 }

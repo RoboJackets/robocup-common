@@ -18,6 +18,9 @@ private:
 
     struct pid_set {
         pid_set(float ip=0, float ii=0, float id=0);
+        inline bool operator==(const pid_set& pid_in){
+            return (p == pid_in.p) && (i == pid_in.i) && (d == pid_in.d);
+        }
         float p;
         float i;
         float d;
@@ -30,16 +33,20 @@ private:
     pid_set _hill_vector;
 
     int _cycles;
+    int _test_num;
 
     float _pScale;
     float _iScale;
     float _dScale;
+
+    float _overScale;
 
     float _errThreshold;
 
     float _minScore;
 
     std::vector <pid_set> _pid_sets;
+    std::vector <pid_set> _test_sets;
 
 };
 
