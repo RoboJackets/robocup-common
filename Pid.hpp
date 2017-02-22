@@ -21,6 +21,8 @@ public:
     //tuner stuff
     void initialize_tuner();
 
+    void set_from_tuner();
+
     void start_cycle();
     void run();
     bool end_cycle();

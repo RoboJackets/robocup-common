@@ -41,11 +41,10 @@ private:
 
     float _overScale;
 
-    float _errThreshold;
+    float _prev_score;
 
-    float _minScore;
+    float _threshold;
 
-    std::vector <pid_set> _pid_sets;
     std::vector <pid_set> _test_sets;
 
 };
