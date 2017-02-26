@@ -30,16 +30,16 @@ public:
      */
     bool endCycle();
 
-    float getP(){ return _currentPid.p; }
-    float getI(){ return _currentPid.i; }
-    float getD(){ return _currentPid.d; }
+    float getP() { return _currentPid.p; }
+    float getI() { return _currentPid.i; }
+    float getD() { return _currentPid.d; }
 
 private:
 
     /** Struct to store P, I and D values, also stores a score of the error */
     struct PidSet {
         PidSet(float ip=0, float ii=0, float id=0);
-        inline bool operator==(const PidSet& pidIn){
+        inline bool operator==(const PidSet& pidIn) {
             return (p == pidIn.p) && (i == pidIn.i) && (d == pidIn.d);
         }
         float p;

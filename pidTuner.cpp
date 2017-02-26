@@ -4,7 +4,7 @@
 #include <algorithm>
 
 
-PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd){
+PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd) {
     _initialPid = PidSet(ip,ii,id);
     _currentPid =  _initialPid;
 
@@ -22,16 +22,16 @@ PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd){
     _overScale = 2; //the step is divided by overscale each time it overshoots the target
 }
 
-PidTuner::PidSet::PidSet(float ip, float ii, float id){
+PidTuner::PidSet::PidSet(float ip, float ii, float id) {
     p=ip;
     i=ii;
     d=id;
     score=0;
 }
 
-void PidTuner::startCycle(){
+void PidTuner::startCycle() {
     //if old test set is done, determine new values to test
-    if(_testNum==_testSets.size()){
+    if(_testNum==_testSets.size()) {
         _testSets.clear();
         _testSets.push_back(PidSet(_currentPid.p, _currentPid.i, _currentPid.d));
         _testSets.push_back(PidSet(_currentPid.p + _pScale, _currentPid.i, _currentPid.d));
@@ -42,16 +42,16 @@ void PidTuner::startCycle(){
     _currentPid = _testSets[_testNum];
 }
 
-void PidTuner::run(float err){
+void PidTuner::run(float err) {
     _currentPid.score += fabs(err);
 }
 
 //returns if pid needs more tuning, if it does, sets up next test points
-bool PidTuner::endCycle(){
+bool PidTuner::endCycle() {
     _testSets[_testNum] = _currentPid;
     _testNum += 1;
 
-    if(_testNum==_testSets.size()){
+    if(_testNum==_testSets.size()) {
         //finished testing set, determine best pid, then check if we need more tests
         _cycles+=1;
 
@@ -67,16 +67,15 @@ bool PidTuner::endCycle(){
 
         _currentPid = PidSet(_testSets[0].p + _pScale, _testSets[0].i + _iScale, _testSets[0].d + _dScale);
 
-        //make sure we have a prev score
-        if(_cycles > 1 && _prevScore - bestPid.score < _threshold){
+        //make sure we have a prev score, then check how much the score improved by
+        if(_cycles > 1 && _prevScore - bestPid.score < _threshold) {
             _currentPid = bestPid;
             return false; //Finished tuning
-        }
-        else{
+        } else {
             _prevScore = bestPid.score;
             return true; //keep testing
         }
-    } else{
+    } else {
         return true; //keep testing
     }
 }
