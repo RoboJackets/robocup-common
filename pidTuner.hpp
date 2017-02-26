@@ -64,6 +64,8 @@ private:
 
     float _threshold;
 
+    float _overScale;
+
     std::vector <PidSet> _testSets;
 };
 

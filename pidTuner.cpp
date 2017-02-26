@@ -18,6 +18,8 @@ PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd){
     _overScale = 1;
 
     _threshold = .5;
+
+    _overScale = 2; //the step is divided by overscale each time it overshoots the target
 }
 
 PidTuner::PidSet::PidSet(float ip, float ii, float id){
@@ -58,12 +60,6 @@ bool PidTuner::endCycle(){
         bestPid = *(std::min_element(std::begin(_testSets),std::end(_testSets),
             [] (PidSet const& p1, PidSet const& p2){ return p1.score < p2.score;}));
 
-        if(bestPid == _testSets[0]){
-            _overScale = 2;
-        }
-        else{
-            _overScale = 1;
-        }
 
         _pScale *= _testSets[0].score > _testSets[1].score ? 1 : -1/_overScale;
         _iScale *= _testSets[0].score > _testSets[2].score ? 1 : -1/_overScale;
