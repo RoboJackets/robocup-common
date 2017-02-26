@@ -1,11 +1,14 @@
 #pragma once
 #include <vector>
 
+/**
+Class contained by Pid to automatically tune PID Coefficients
+*/
 class PidTuner {
 public:
 
     /**
-     *@Brief Constructs a new PidTuner
+     *@brief Constructs a new PidTuner
      *@param ip The starting P value
      *@param ii The starting I value
      *@param id The starting D value
@@ -15,18 +18,18 @@ public:
      */
     PidTuner(float ip, float ii, float id, float Sp = .5, float Si = .05, float Sd = .01);
 
-    /** Starts a cycle to test a PID value
-     *  Call Once at the beginning of a test cycle
+    /** @brief Starts a cycle to test a PID value
+     *  @details Call Once at the beginning of a test cycle
      */
     void startCycle();
 
-    /** Adds the error to the total score of the current PID set
-     *  Call once each frame during a PID test
+    /** @brief Adds the error to the total score of the current PID set
+     *  @details Call Once each frame during a PID test
      */
     void run(float err);
 
-    /** Ends the test of a PID value, returns True if more tuning is needed
-     *  Call Once at the end of a test cycle
+    /** @brief Ends the test of a PID value, returns True if more tuning is needed
+     *  @details Call Once at the end of a test cycle
      */
     bool endCycle();
 
