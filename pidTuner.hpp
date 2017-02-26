@@ -13,7 +13,7 @@ public:
      *@param Si The step used for I
      *@param Sd The step used for D
      */
-    PidTuner(float ip, float ii, float id, float Sp=.5, float Si=.05, float Sd=.01);
+    PidTuner(float ip, float ii, float id, float Sp = .5, float Si = .05, float Sd = .01);
 
     /** Starts a cycle to test a PID value
      *  Call Once at the beginning of a test cycle
@@ -38,7 +38,7 @@ private:
 
     /** Struct to store P, I and D values, also stores a score of the error */
     struct PidSet {
-        PidSet(float ip=0, float ii=0, float id=0);
+        PidSet(float ip = 0, float ii = 0, float id = 0);
         inline bool operator==(const PidSet& pidIn) {
             return (p == pidIn.p) && (i == pidIn.i) && (d == pidIn.d);
         }

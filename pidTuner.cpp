@@ -53,7 +53,7 @@ bool PidTuner::endCycle() {
 
     if(_testNum==_testSets.size()) {
         //finished testing set, determine best pid, then check if we need more tests
-        _cycles+=1;
+        _cycles += 1;
 
 
         PidSet bestPid = _testSets[0];
