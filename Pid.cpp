@@ -57,31 +57,31 @@ void Pid::clearWindup() {
     std::fill(_oldErr.begin(), _oldErr.end(), 0);
 }
 
-void Pid::initialize_tuner(){
-    _tuner = new pidTuner(kp,ki,kd);
+void Pid::initializeTuner(){
+    _tuner = make_unique<PidTuner>(kp,ki,kd);
 }
 
-void Pid::set_from_tuner(){
+void Pid::setFromTuner(){
     kp = _tuner->getP();
     ki = _tuner->getI();
     kd = _tuner->getD();
 }
 
-void Pid::start_cycle(){
-    _tuner->start_cycle();
-    set_from_tuner();
+void Pid::startTunerCycle(){
+    _tuner->startCycle();
+    setFromTuner();
 }
 
-void Pid::run(){
+void Pid::runTuner(){
     _tuner->run(_lastErr);
 }
 
-bool Pid::end_cycle(){
-    if(_tuner->end_cycle()){
+bool Pid::endTunerCycle(){
+    if(_tuner->endCycle()){
         return true;
     }
     else{
-        set_from_tuner();
+        setFromTuner();
         return false;
     }
 }
