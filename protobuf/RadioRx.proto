@@ -3,7 +3,7 @@ package Packet;
 
 enum MotorStatus
 {
-    UNKNOWN = 0;
+    UnknownMotor = 0;
 	Good = 1;
 	Hall_Failure = 2;
 	Stalled = 3;
@@ -12,7 +12,7 @@ enum MotorStatus
 
 enum BallSenseStatus
 {
-    UNKNOWN = 0;
+    UnknownBall = 0;
 	NoBall = 1;
 	HasBall = 2;
 	Dazzled = 3;
@@ -21,7 +21,7 @@ enum BallSenseStatus
 
 enum FpgaStatus
 {
-    UNKNOWN = 0;
+    UnknownFpga = 0;
 	FpgaGood = 1;
 	FpgaNotInitialized = 2;
 	FpgaError = 3;
@@ -29,7 +29,7 @@ enum FpgaStatus
 
 enum HardwareVersion
 {
-	Unknown = 0;
+	UnknownHardware = 0;
 	RJ2008 = 1;
 	RJ2011 = 2;
 	RJ2015 = 3;
@@ -44,11 +44,11 @@ message Quaternion
 }
 
 message MotorStatuses {
-    optional MotorStatus motor1;
-    optional MotorStatus motor2;
-    optional MotorStatus motor3;
-    optional MotorStatus motor4;
-    optional MotorStatus dribbler;
+    optional MotorStatus motor1 = 1;
+    optional MotorStatus motor2 = 2;
+    optional MotorStatus motor3 = 3;
+    optional MotorStatus motor4 = 4;
+    optional MotorStatus dribbler = 5;
 }
 
 message RobotRxPacket
@@ -63,12 +63,12 @@ message RobotRxPacket
 message RobotStatusMessage
 {
     optional uint32 uid = 1;
-    optional uint32 battery_voltage = 2;
+    optional float battery_level = 2;
 	optional MotorStatuses motor_status = 3;
 	optional BallSenseStatus ball_sense_status = 4;
 	optional uint32 kicker_status = 5;
-	optional FpgaStatus fpga_status = 6 [default = Unknown];
-	optional HardwareVersion hardware_version = 7 [default = Unknown];
+	optional FpgaStatus fpga_status = 6;
+	optional HardwareVersion hardware_version = 7;
 }
 
 
@@ -91,7 +91,7 @@ message RadioRx
 	
 	optional FpgaStatus fpga_status = 14 [default = FpgaGood];
 
-	optional HardwareVersion hardware_version = 12 [default = Unknown];
+	optional HardwareVersion hardware_version = 12 [default = UnknownHardware];
 	
 	optional Quaternion quaternion = 13;
 }

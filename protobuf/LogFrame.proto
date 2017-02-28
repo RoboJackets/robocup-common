@@ -120,6 +120,8 @@ message LogFrame
 		optional Point body_vel= 16;
 		required int32 shell = 2;
 		required float angle = 3;
+
+		optional RobotStatusMessage robot_status_message = 17;
 		optional BallSenseStatus ball_sense_status = 4;
 		
 		repeated DebugText text = 6;
