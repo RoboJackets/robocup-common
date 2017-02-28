@@ -55,8 +55,6 @@ function(PROTOBUF_GENERATE_NANOPB_CPP SRCS HDRS)
 endfunction()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-message("asdfasdf")
-message(${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/nanopb/)
 
 # positon-independent-code flag
