@@ -91,7 +91,8 @@ message LogFrame
 	// Network packets received since the last iteration
 	repeated SSL_WrapperPacket raw_vision = 1;
 	repeated SSL_Referee raw_refbox = 27;
-	repeated RadioRx radio_rx = 3;
+	repeated RadioRx radio_rx = 3; //Deprecated
+    repeated RobotRxPacket robot_rx_packet = 28;
 
 	// Deprecated field kept for compatability with old logs
 	repeated bytes raw_referee = 2;

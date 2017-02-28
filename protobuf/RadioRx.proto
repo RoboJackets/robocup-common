@@ -3,25 +3,28 @@ package Packet;
 
 enum MotorStatus
 {
-	Good = 0;
-	Hall_Failure = 1;
-	Stalled = 2;
-	Encoder_Failure = 3;
+    UNKNOWN = 0;
+	Good = 1;
+	Hall_Failure = 2;
+	Stalled = 3;
+	Encoder_Failure = 4;
 }
 
 enum BallSenseStatus
 {
-	NoBall = 0;
-	HasBall = 1;
-	Dazzled = 2;
-	Failed = 3;
+    UNKNOWN = 0;
+	NoBall = 1;
+	HasBall = 2;
+	Dazzled = 3;
+	Failed = 4;
 }
 
 enum FpgaStatus
 {
-	FpgaGood = 0;
-	FpgaNotInitialized = 1;
-	FpgaError = 2;
+    UNKNOWN = 0;
+	FpgaGood = 1;
+	FpgaNotInitialized = 2;
+	FpgaError = 3;
 }
 
 enum HardwareVersion
@@ -39,6 +42,35 @@ message Quaternion
 	required float q2 = 3;
 	required float q3 = 4;
 }
+
+message MotorStatuses {
+    optional MotorStatus motor1;
+    optional MotorStatus motor2;
+    optional MotorStatus motor3;
+    optional MotorStatus motor4;
+    optional MotorStatus dribbler;
+}
+
+message RobotRxPacket
+{
+    optional uint64 timestamp = 1;
+    optional uint32 robot_id = 2;
+    oneof message {
+        RobotStatusMessage robot_status_message = 3;
+    }
+}
+// Packet going out from radio program to control program
+message RobotStatusMessage
+{
+    optional uint32 uid = 1;
+    optional uint32 battery_voltage = 2;
+	optional MotorStatuses motor_status = 3;
+	optional BallSenseStatus ball_sense_status = 4;
+	optional uint32 kicker_status = 5;
+	optional FpgaStatus fpga_status = 6 [default = Unknown];
+	optional HardwareVersion hardware_version = 7 [default = Unknown];
+}
+
 
 // Packet going out from radio program to control program
 message RadioRx
