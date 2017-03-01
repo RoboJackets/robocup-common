@@ -39,7 +39,7 @@ public:
 
 private:
 
-    /** Struct to store P, I and D values, also stores a score of the error */
+    //Struct to store P, I and D values and a score of the error
     struct PidSet {
         PidSet(float ip = 0, float ii = 0, float id = 0);
         inline bool operator==(const PidSet& pidIn) {
@@ -60,8 +60,6 @@ private:
     float _pScale;
     float _iScale;
     float _dScale;
-
-    float _overScale;
 
     float _prevScore;
 
