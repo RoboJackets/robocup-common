@@ -6,6 +6,7 @@
 
 namespace rtp {
 
+static constexpr float VELOCITY_SCALE_FACTOR = 1000;
 /// Max packet size.  This is limited by the CC1201 buffer size.
 static const unsigned int MAX_DATA_SZ = 120;
 

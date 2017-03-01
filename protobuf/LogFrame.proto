@@ -153,6 +153,7 @@ message LogFrame
 
 	// Data sent to the radio
 	optional RadioTx radio_tx = 15;
+	optional RobotsTxPacket radio_tx_packets = 29;
 
 	// Which robot is under manual control
 	optional sint32 manual_id = 16 [default = -1];

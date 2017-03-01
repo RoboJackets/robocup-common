@@ -2,6 +2,7 @@ syntax = "proto2";
 package Packet;
 
 import "Robot.proto";
+import "Control.proto";
 
 message RadioTx
 {
@@ -13,4 +14,17 @@ message RadioTx
 
 	required TxMode txMode = 1;
 	repeated Robot robots = 2;
+}
+
+message RobotsTxPacket
+{
+    repeated RobotTxPacket robots = 1;
+}
+
+message RobotTxPacket
+{
+    optional uint32 uid = 2;
+    oneof message {
+        RadioRobotControl control = 1;
+    }
 }
