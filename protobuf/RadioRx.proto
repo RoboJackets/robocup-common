@@ -43,6 +43,12 @@ message Quaternion
 	required float q3 = 4;
 }
 
+enum KickerStatus {
+    UnknownKickerStatus = 0;
+    KickerCharging = 1;
+    KickerCharged = 2;
+}
+
 message MotorStatuses {
     optional MotorStatus motor1 = 1;
     optional MotorStatus motor2 = 2;
@@ -66,7 +72,7 @@ message RobotStatusMessage
     optional float battery_level = 2;
 	optional MotorStatuses motor_status = 3;
 	optional BallSenseStatus ball_sense_status = 4;
-	optional uint32 kicker_status = 5;
+	optional KickerStatus kicker_status = 5;
 	optional FpgaStatus fpga_status = 6;
 	optional HardwareVersion hardware_version = 7;
 }
@@ -79,19 +85,19 @@ message RadioRx
 	required uint32 robot_id = 2;
 	optional float rssi = 3;
 	optional float battery = 4;
-	
+
 	optional BallSenseStatus ball_sense_status = 5;
-	
+
 	repeated MotorStatus motor_status = 7;
 	repeated int32 encoders = 8;
-	
+
 	optional uint32 kicker_status = 9;
-	
+
 	optional uint32 kicker_voltage = 11;
-	
+
 	optional FpgaStatus fpga_status = 14 [default = FpgaGood];
 
 	optional HardwareVersion hardware_version = 12 [default = UnknownHardware];
-	
+
 	optional Quaternion quaternion = 13;
 }
