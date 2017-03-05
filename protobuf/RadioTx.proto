@@ -1,7 +1,6 @@
 syntax = "proto2";
 package Packet;
 
-import "nanopb.proto";
 import "Robot.proto";
 import "Control.proto";
 
@@ -19,7 +18,7 @@ message RadioTx
 
 message RobotsTxPacket
 {
-    repeated RobotTxPacket robots = 1 [(nanopb).max_count = 6];
+    repeated RobotTxPacket robots = 1;
 }
 
 message RobotTxPacket

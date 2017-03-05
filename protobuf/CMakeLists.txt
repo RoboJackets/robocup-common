@@ -42,7 +42,7 @@ function(PROTOBUF_GENERATE_NANOPB_CPP SRCS HDRS)
       OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.c"
              "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.h"
       COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE}
-      ARGS --nanopb_out=${CMAKE_CURRENT_BINARY_DIR}/nanopb
+      ARGS "--nanopb_out=-f ${CMAKE_CURRENT_SOURCE_DIR}/nanopb.options:${CMAKE_CURRENT_BINARY_DIR}/nanopb"
            --plugin=protoc-gen-nanopb=${NANOPB_CPP_PLUGIN}
            ${_protobuf_include_path} ${ABS_FIL}
       DEPENDS ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE} libprotobuf-nanopb
