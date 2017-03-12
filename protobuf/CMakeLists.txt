@@ -38,16 +38,29 @@ function(PROTOBUF_GENERATE_NANOPB_CPP SRCS HDRS)
     list(APPEND ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.c")
     list(APPEND ${HDRS} "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.h")
 
-    add_custom_command(
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${FIL_WE}.options)
+      add_custom_command(
       OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.c"
              "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.h"
       COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE}
-      ARGS "--nanopb_out=-f ${CMAKE_CURRENT_SOURCE_DIR}/nanopb.options:${CMAKE_CURRENT_BINARY_DIR}/nanopb"
+      ARGS "--nanopb_out=-f ${CMAKE_CURRENT_SOURCE_DIR}/${FIL_WE}.options:${CMAKE_CURRENT_BINARY_DIR}/nanopb"
+           --plugin=protoc-gen-nanopb=${NANOPB_CPP_PLUGIN}
+           ${_protobuf_include_path} ${ABS_FIL}
+      DEPENDS ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE} libprotobuf-nanopb ${CMAKE_CURRENT_SOURCE_DIR}/${FIL_WE}.options
+      COMMENT "Running nanopb C++ protocol buffer compiler on ${FIL}"
+      VERBATIM)
+    else()
+      add_custom_command(
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.c"
+             "${CMAKE_CURRENT_BINARY_DIR}/nanopb/${FIL_WE}.pb.h"
+      COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE}
+      ARGS "--nanopb_out=${CMAKE_CURRENT_BINARY_DIR}/nanopb"
            --plugin=protoc-gen-nanopb=${NANOPB_CPP_PLUGIN}
            ${_protobuf_include_path} ${ABS_FIL}
       DEPENDS ${ABS_FIL} ${Protobuf_PROTOC_EXECUTABLE} libprotobuf-nanopb
       COMMENT "Running nanopb C++ protocol buffer compiler on ${FIL}"
       VERBATIM)
+    endif()
   endforeach()
 
   set_source_files_properties(${${SRCS}} ${${HDRS}} PROPERTIES GENERATED TRUE)
