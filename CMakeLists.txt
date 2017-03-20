@@ -1,4 +1,13 @@
+if(${COMPILE_MBED})
+# set the arm toolchain and include it so we can use it
+set(CMAKE_TOOLCHAIN_FILE ${ARM_TOOLCHAIN_FILE})
+include(${ARM_TOOLCHAIN_FILE})
 
+# Set compiler and linker flags
+set(CMAKE_CXX_FLAGS         ${MBED_CMAKE_CXX_FLAGS}         )
+set(CMAKE_C_FLAGS           ${MBED_CMAKE_C_FLAGS}           )
+set(CMAKE_EXE_LINKER_FLAGS  ${MBED_CMAKE_EXE_LINKER_FLAGS}  )
+endif()
 add_subdirectory(protobuf)
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/protobuf")
 
@@ -94,12 +103,21 @@ file(WRITE ${CMAKE_BINARY_DIR}/version.cmake
 # so it does the actual work.
 # It'd be nice if CMake had a way to do this as a single custom command/target, but since it doesn't,
 # this is the workaround.
+if(COMPILE_FIRMWARE)
+add_custom_target(git_version
+    ${CMAKE_COMMAND} -D SRC=${CMAKE_BINARY_DIR}/git_version.cpp.in
+                     -D DST=${CMAKE_BINARY_DIR}/firmware/common/git_version.cpp
+                     -P ${CMAKE_BINARY_DIR}/version.cmake
+    COMMENT "Generating git version c++ file"
+)
+else()
 add_custom_target(git_version
     ${CMAKE_COMMAND} -D SRC=${CMAKE_BINARY_DIR}/git_version.cpp.in
                      -D DST=${CMAKE_BINARY_DIR}/common/git_version.cpp
                      -P ${CMAKE_BINARY_DIR}/version.cmake
     COMMENT "Generating git version c++ file"
 )
+endif()
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/git_version.cpp
     DEPENDS git_version

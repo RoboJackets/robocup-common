@@ -82,3 +82,8 @@ add_library(proto_messages STATIC ${PROTO_SRC} ${PROTO_INCLUDE} ${PROTO_NANOPB_S
 add_library(nanopb_messages STATIC ${PROTO_NANOPB_SRC} ${PROTO_NANOPB_INCLUDE})
 target_link_libraries(nanopb_messages libprotobuf-nanopb)
 target_link_libraries(proto_messages ${PROTOBUF_LIBRARIES})
+
+if(${COMPILE_MBED})
+target_link_libraries(nanopb_messages ${MBED_LIBRARY})
+target_link_libraries(proto_messages ${MBED_LIBRARY})
+endif()
