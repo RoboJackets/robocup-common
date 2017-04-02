@@ -21,8 +21,13 @@ PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd) {
 
     _overScale = 2; //the step is divided by overscale each time it overshoots the target
 
+    avg = 0;
+
     for(float p = -10; p<=10.5; p+=_pScale){
-        _testSets.push_back(_initialPid);
+        _testSets.push_back(PidSet(p,ii,id));
+        _testSets.push_back(PidSet(p,ii,id));
+        _testSets.push_back(PidSet(p,ii,id));
+        _testSets.push_back(PidSet(p,ii,id));
     }
     std::cout<<"PID, Error"<<std::endl;
 }
@@ -51,6 +56,12 @@ bool PidTuner::endCycle() {
     _testSets[_testNum] = _currentPid;
     _testNum += 1;
 
-    std::cout<<_currentPid.score<<std::endl;
+    if(_testNum%4 == 0){ //avg 4 tests of the same value together
+        std::cout<<_testNum<<","<<avg/4.0<<std::endl;
+        avg = 0;
+    }
+    else{
+        avg+=_currentPid.score;
+    }
     return true;
 }

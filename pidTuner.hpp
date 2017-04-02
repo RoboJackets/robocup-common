@@ -67,6 +67,8 @@ private:
 
     float _overScale;
 
+    float avg;
+
     std::vector <PidSet> _testSets;
 };
 
