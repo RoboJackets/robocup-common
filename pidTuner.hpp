@@ -16,7 +16,7 @@ public:
      *@param Si The step used for I
      *@param Sd The step used for D
      */
-    PidTuner(float ip, float ii, float id, float Sp = .5, float Si = .05, float Sd = .01);
+    PidTuner(float ip, float ii, float id, float Sp = .25, float Si = .01, float Sd = .005);
 
     /** @brief Starts a cycle to test a PID value
      *  @details Call Once at the beginning of a test cycle

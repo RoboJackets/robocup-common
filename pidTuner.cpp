@@ -50,8 +50,10 @@ void PidTuner::run(float err) {
 bool PidTuner::endCycle() {
     _testSets[_testNum] = _currentPid;
     _testNum += 1;
-
+    std::cout<<_currentPid.p<<" | "<<_currentPid.i<<" | "<<_currentPid.d<<std::endl;
+    std::cout<<_currentPid.score<<std::endl;
     if(_testNum==_testSets.size()) {
+        std::cout<<"---------------------------"<<std::endl;
         //finished testing set, determine best pid, then check if we need more tests
         _cycles += 1;
 
