@@ -11,7 +11,7 @@ PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd) {
     _cycles = 0;
     _testNum = 0;
 
-    _pScale = .5; //ONLY CHECK P VALUES
+    _pScale = .1; //ONLY CHECK P VALUES
     _iScale = 0;
     _dScale = 0;
 
@@ -23,11 +23,12 @@ PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd) {
 
     avg = 0;
 
-    for(float p = -10; p<=10.5; p+=_pScale){
-        _testSets.push_back(PidSet(p,ii,id));
-        _testSets.push_back(PidSet(p,ii,id));
-        _testSets.push_back(PidSet(p,ii,id));
-        _testSets.push_back(PidSet(p,ii,id));
+    repeat = 1;
+
+    for(float p = 1; p<=20; p+=_pScale){
+        for(int i = 0; i < repeat; i++){
+            _testSets.push_back(PidSet(p,0,0));
+        }
     }
     std::cout<<"PID, Error"<<std::endl;
 }
@@ -56,12 +57,15 @@ bool PidTuner::endCycle() {
     _testSets[_testNum] = _currentPid;
     _testNum += 1;
 
-    if(_testNum%4 == 0){ //avg 4 tests of the same value together
-        std::cout<<_testNum<<","<<avg/4.0<<std::endl;
+    std::cout<<_currentPid.p<<" , "<<_currentPid.score<<std::endl;
+
+    /*if(_testNum%repeat == 0){ //avg 4 tests of the same value together
+        std::cout<<_currentPid.p<<" , "<<avg/repeat<<std::endl;
         avg = 0;
     }
     else{
         avg+=_currentPid.score;
-    }
+    }*/
+
     return true;
 }

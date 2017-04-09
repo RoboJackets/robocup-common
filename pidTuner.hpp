@@ -69,6 +69,8 @@ private:
 
     float avg;
 
+    int repeat;
+
     std::vector <PidSet> _testSets;
 };
 
