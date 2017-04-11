@@ -6,7 +6,9 @@
 
 PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd) {
     _initialPid = PidSet(ip,ii,id);
-    _currentPid =  _initialPid;
+    //_currentPid =  _initialPid;
+
+    _currentPid = PidSet(3,0,0);
 
     _cycles = 0;
     _testNum = 0;
@@ -15,9 +17,7 @@ PidTuner::PidTuner(float ip, float ii, float id, float Sp, float Si, float Sd) {
     _iScale = Si;
     _dScale = Sd;
 
-    _overScale = 1;
-
-    _threshold = .5;
+    _threshold = .0001;
 
     _overScale = 2; //the step is divided by overscale each time it overshoots the target
 }
@@ -33,11 +33,26 @@ void PidTuner::startCycle() {
     //if old test set is done, determine new values to test
     if(_testNum==_testSets.size()) {
         _testSets.clear();
-        _testSets.push_back(PidSet(_currentPid.p, _currentPid.i, _currentPid.d));
+        //maintain the score for this since it has been tested before
+        _testSets.push_back(_currentPid);
+
         _testSets.push_back(PidSet(_currentPid.p + _pScale, _currentPid.i, _currentPid.d));
+        if(_currentPid.p - _pScale >= 0){
+            _testSets.push_back(PidSet(_currentPid.p - _pScale, _currentPid.i, _currentPid.d));
+        }
+
         _testSets.push_back(PidSet(_currentPid.p, _currentPid.i + _iScale, _currentPid.d));
+        if( _currentPid.i - _iScale > 0){
+            _testSets.push_back(PidSet(_currentPid.p, _currentPid.i - _iScale, _currentPid.d));
+        }
+
         _testSets.push_back(PidSet(_currentPid.p, _currentPid.i, _currentPid.d + _dScale));
-        _testNum = 0;
+        if( _currentPid.d - _dScale > 0){
+            _testSets.push_back(PidSet(_currentPid.p, _currentPid.i, _currentPid.d - _dScale));
+        }
+
+        //don't test the first value if we have a score for it already
+        _testNum = _cycles ? 1 : 0;
     }
     _currentPid = _testSets[_testNum];
 }
@@ -57,26 +72,34 @@ bool PidTuner::endCycle() {
         //finished testing set, determine best pid, then check if we need more tests
         _cycles += 1;
 
+        if(_cycles > 1){
+            //if we have found a _bestPid, check it too
+            _testSets.push_back(_bestPid);
+        }
+        else{
+            //stand in
+            _testSets.push_back(_testSets[0]);
+        }
 
-        PidSet bestPid = _testSets[0];
-        bestPid = *(std::min_element(std::begin(_testSets),std::end(_testSets),
+        //Find the set with the lowest score
+        _bestPid = *(std::min_element(std::begin(_testSets),std::end(_testSets),
             [] (PidSet const& p1, PidSet const& p2){ return p1.score < p2.score;}));
 
+        //Don't actually need to include bestPid in testSet
+        _testSets.pop_back();
 
-        _pScale *= _testSets[0].score > _testSets[1].score ? 1 : -1/_overScale;
-        _iScale *= _testSets[0].score > _testSets[2].score ? 1 : -1/_overScale;
-        _dScale *= _testSets[0].score > _testSets[3].score ? 1 : -1/_overScale;
+        //_pScale *= _testSets[0].score > _testSets[1].score ? 1 : -1/_overScale;
+        //_iScale *= _testSets[0].score > _testSets[2].score ? 1 : -1/_overScale;
+        //_dScale *= _testSets[0].score > _testSets[3].score ? 1 : -1/_overScale;
 
-        _currentPid = PidSet(_testSets[0].p + _pScale, _testSets[0].i + _iScale, _testSets[0].d + _dScale);
+        _currentPid = _bestPid;
 
-        //make sure we have a prev score, then check how much the score improved by
-        if(_cycles > 1 && _prevScore - bestPid.score < _threshold) {
-            _currentPid = bestPid;
-            return false; //Finished tuning
-        } else {
-            _prevScore = bestPid.score;
-            return true; //keep testing
-        }
+        std::cout<<"Best: "<<_bestPid.p<<" | "<<_bestPid.i<<" | "<<_bestPid.d<<" | "<<_bestPid.score<<std::endl;
+        std::cout<<"---------------------------"<<std::endl;
+
+        //return if we should keep testing
+        return fabs(_pScale) >= _threshold;
+
     } else {
         return true; //keep testing
     }

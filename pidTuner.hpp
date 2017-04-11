@@ -16,7 +16,7 @@ public:
      *@param Si The step used for I
      *@param Sd The step used for D
      */
-    PidTuner(float ip, float ii, float id, float Sp = .25, float Si = .01, float Sd = .005);
+    PidTuner(float ip, float ii, float id, float Sp = .1, float Si = .1, float Sd = .1);
 
     /** @brief Starts a cycle to test a PID value
      *  @details Call Once at the beginning of a test cycle
@@ -53,6 +53,7 @@ private:
 
     PidSet _initialPid;
     PidSet _currentPid;
+    PidSet _bestPid;
 
     int _cycles;
     int _testNum;
@@ -60,8 +61,6 @@ private:
     float _pScale;
     float _iScale;
     float _dScale;
-
-    float _prevScore;
 
     float _threshold;
 
