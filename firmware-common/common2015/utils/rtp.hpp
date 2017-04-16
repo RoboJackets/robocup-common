@@ -47,13 +47,13 @@ bool DeserializeFromBuffer(PACKET_TYPE* pkt, uint8_t* buf, size_t bufSize) {
 enum Port { SINK = 0, LINK = 1, CONTROL = 2, LEGACY = 3, PING = 4 };
 
 struct header_data {
-    enum Type { Control, Tuning, FirmwareUpdate, Misc };
+    // enum Type { Control, Tuning, FirmwareUpdate, Misc };
 
-    header_data(Port p = SINK) : address(0), port(p), type(Control){};
+    header_data(Port p = SINK) : address(0), port(p) {};
 
     uint8_t address;
     Port port : 4;
-    Type type : 4;
+    // Type type : 4;
 } __attribute__((packed));
 
 // binary-packed version of Control.proto
