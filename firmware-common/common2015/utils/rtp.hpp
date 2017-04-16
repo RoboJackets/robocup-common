@@ -57,49 +57,49 @@ struct header_data {
 } __attribute__((packed));
 
 // binary-packed version of Control.proto
-struct ControlMessage {
-    uint8_t uid;  // robot id
+// struct ControlMessage {
+//     uint8_t uid;  // robot id
 
-    /** body{X,Y,W} are multiplied by this value before being sent over the
-     * radio and must be then divided by this value on the receiving side. This
-     * is to avoid loss of precision when sending float velocity values across
-     * the air as ints.
-     */
-    static const uint16_t VELOCITY_SCALE_FACTOR = 1000;
+//     /** body{X,Y,W} are multiplied by this value before being sent over the
+//      * radio and must be then divided by this value on the receiving side. This
+//      * is to avoid loss of precision when sending float velocity values across
+//      * the air as ints.
+//      */
+//     static const uint16_t VELOCITY_SCALE_FACTOR = 1000;
 
-    int16_t bodyX;
-    int16_t bodyY;
-    int16_t bodyW;
-    int8_t dribbler;
-    uint8_t kickStrength;
-    unsigned shootMode : 1;    // 0 = kick, 1 = chip
-    unsigned triggerMode : 2;  // 0 = off, 1 = immediate, 2 = on break beam
-    unsigned song : 2;         // 0 = stop, 1 = continue, 2 = GT fight song
-} __attribute__((packed));
+//     int16_t bodyX;
+//     int16_t bodyY;
+//     int16_t bodyW;
+//     int8_t dribbler;
+//     uint8_t kickStrength;
+//     unsigned shootMode : 1;    // 0 = kick, 1 = chip
+//     unsigned triggerMode : 2;  // 0 = off, 1 = immediate, 2 = on break beam
+//     unsigned song : 2;         // 0 = stop, 1 = continue, 2 = GT fight song
+// } __attribute__((packed));
 
-struct RobotStatusMessage {
-    uint8_t uid;  // robot id
+// struct RobotStatusMessage {
+//     uint8_t uid;  // robot id
 
-    /** @battVoltage is a direct reading from the mbed's ADC and is sent over
-     * the air as-is.  Soccer must convert this reading into an actual voltage
-     * value by multiplying it by the scale factor. The theoretical scale factor
-     * is 0.100546875, but this has been adjusted after testing to the value
-     * below.
-     */
-    static constexpr float BATTERY_READING_SCALE_FACTOR = 0.09884;
-    uint8_t battVoltage;
+//     /** @battVoltage is a direct reading from the mbed's ADC and is sent over
+//      * the air as-is.  Soccer must convert this reading into an actual voltage
+//      * value by multiplying it by the scale factor. The theoretical scale factor
+//      * is 0.100546875, but this has been adjusted after testing to the value
+//      * below.
+//      */
+//     static constexpr float BATTERY_READING_SCALE_FACTOR = 0.09884;
+//     uint8_t battVoltage;
 
-    // 1 bit for each motor - 1 = error, 0 = good
-    unsigned  motorErrors:5;
+//     // 1 bit for each motor - 1 = error, 0 = good
+//     unsigned  motorErrors:5;
 
-    unsigned ballSenseStatus : 1;
+//     unsigned ballSenseStatus : 1;
 
-    // robot charged?
-    unsigned kickStatus:1;
+//     // robot charged?
+//     unsigned kickStatus:1;
 
-    // 0 = good, 1 = bad
-    unsigned fpgaStatus:1;
-} __attribute__((packed));
+//     // 0 = good, 1 = bad
+//     unsigned fpgaStatus:1;
+// } __attribute__((packed));
 
 /**
  * @brief Real-Time packet definition
@@ -151,9 +151,9 @@ public:
 };
 
 // Packet sizes
-constexpr unsigned int Forward_Size =
-    sizeof(header_data) + 6 * sizeof(ControlMessage);
-constexpr unsigned int Reverse_Size =
-    sizeof(header_data) + sizeof(RobotStatusMessage);
+// constexpr unsigned int Forward_Size =
+//     sizeof(header_data) + 6 * sizeof(ControlMessage);
+// constexpr unsigned int Reverse_Size =
+//     sizeof(header_data) + sizeof(RobotStatusMessage);
 
 }  // namespace rtp
