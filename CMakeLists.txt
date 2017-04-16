@@ -7,22 +7,6 @@ include(${ARM_TOOLCHAIN_FILE})
 set(CMAKE_CXX_FLAGS         ${MBED_CMAKE_CXX_FLAGS}         )
 set(CMAKE_C_FLAGS           ${MBED_CMAKE_C_FLAGS}           )
 set(CMAKE_EXE_LINKER_FLAGS  ${MBED_CMAKE_EXE_LINKER_FLAGS}  )
-else()
-    # TODO Remove qt from common if possible
-    if(APPLE)
-        # look for the homebrew-installed version of Qt5
-        find_package(Qt5Widgets
-            REQUIRED
-            PATHS /usr/local/Cellar/qt5/*)
-
-        # this directory is included by default, but we mark it as SYSTEM so
-        # warnings in external headers don't show up every time we build
-        include_directories(SYSTEM /usr/local/include/)
-
-    else()
-        find_package(Qt5Widgets REQUIRED)
-        qt5_use_modules(common Core Network Widgets)
-    endif()
 endif()
 add_subdirectory(protobuf)
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/protobuf")
@@ -53,7 +37,24 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 add_library(common STATIC ${COMMON_SRC} git_version.cpp)
 target_link_libraries(common proto_messages)
 
+if(${COMPILE_MBED} )
+else()
+# TODO Remove qt from common if possible
+    if(APPLE)
+        # look for the homebrew-installed version of Qt5
+        find_package(Qt5Widgets
+            REQUIRED
+            PATHS /usr/local/Cellar/qt5/*)
 
+        # this directory is included by default, but we mark it as SYSTEM so
+        # warnings in external headers don't show up every time we build
+        include_directories(SYSTEM /usr/local/include/)
+
+    else()
+        find_package(Qt5Widgets REQUIRED)
+        qt5_use_modules(common Core Network Widgets)
+    endif()
+endif()
 
 
 # write git_version.cpp with the current git SHA and dirty status
