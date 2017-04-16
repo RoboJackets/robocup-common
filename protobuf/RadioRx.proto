@@ -68,13 +68,12 @@ message RobotRxPacket
 // Packet going out from radio program to control program
 message RobotStatusMessage
 {
-    optional uint32 uid = 1;
-    optional float battery_level = 2;
-	optional MotorStatuses motor_status = 3;
-	optional BallSenseStatus ball_sense_status = 4;
-	optional KickerStatus kicker_status = 5;
-	optional FpgaStatus fpga_status = 6;
-	optional HardwareVersion hardware_version = 7;
+    optional float battery_level = 1;
+	optional MotorStatuses motor_status = 2;
+	optional BallSenseStatus ball_sense_status = 3;
+	optional KickerStatus kicker_status = 4;
+	optional FpgaStatus fpga_status = 5;
+	optional HardwareVersion hardware_version = 6;
 }
 
 
