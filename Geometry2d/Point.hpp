@@ -5,6 +5,7 @@
 #include <QtCore/QPointF>
 #include <protobuf/Point.pb.h>
 #include <sstream>
+#include <string>
 
 namespace Geometry2d {
 /**
@@ -38,6 +39,11 @@ public:
      * Implicit constructor for creating a Point from a QPoint
      */
     Point(const QPoint& other) : Point(other.x(), other.y()) {}
+
+    /**
+     * Implicit constructor for creating a Point from a float*
+     */
+    Point(double* other) : Point(double(other[0]), double(other[1])) {}
 
     /**
      * to draw stuff and interface with QT
@@ -156,6 +162,24 @@ public:
     bool operator!=(Point other) const {
         return x() != other.x() || y() != other.y();
     }
+
+    double operator[](int i) {
+        if (0 == i) {
+            return _x;
+        } else if (1 == i) {
+            return _y;
+        } else {
+            throw std::out_of_range("Out of range index for Geometry2d::Point");
+        }
+    }
+
+    /**
+     * Hash function for Geometry2d::Point
+     */
+    static size_t hash(Point pt) {
+        return std::hash<std::string>{}(std::to_string(pt.x()) + " " + std::to_string(pt.y()));
+    }
+
 
     /**
     computes the dot product of this point and another.
