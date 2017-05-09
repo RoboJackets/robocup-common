@@ -43,7 +43,7 @@ public:
     /**
      * Implicit constructor for creating a Point from a float*
      */
-    Point(double* other) : Point(double(other[0]), double(other[1])) {}
+    Point(const double* other) : Point(other[0], other[1]) {}
 
     /**
      * to draw stuff and interface with QT
@@ -163,7 +163,7 @@ public:
         return x() != other.x() || y() != other.y();
     }
 
-    double operator[](int i) {
+    double& operator[](int i) {
         if (0 == i) {
             return _x;
         } else if (1 == i) {
@@ -177,7 +177,7 @@ public:
      * Hash function for Geometry2d::Point
      */
     static size_t hash(Point pt) {
-        return std::hash<std::string>{}(std::to_string(pt.x()) + " " + std::to_string(pt.y()));
+        return std::hash<double>{}(pt.x()*233 + pt.y());
     }
 
 
