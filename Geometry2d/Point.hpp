@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <boost/optional.hpp>
+#include <boost/functional/hash.hpp>
 #include <QtCore/QPointF>
 #include <protobuf/Point.pb.h>
 #include <sstream>
@@ -177,7 +178,10 @@ public:
      * Hash function for Geometry2d::Point
      */
     static size_t hash(Point pt) {
-        return std::hash<double>{}(pt.x()*233 + pt.y());
+        size_t seed = 0;
+        boost::hash_combine(seed, pt.x());
+        boost::hash_combine(seed, pt.y());
+        return seed;
     }
 
 
