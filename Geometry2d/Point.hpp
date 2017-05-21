@@ -42,11 +42,6 @@ public:
     Point(const QPoint& other) : Point(other.x(), other.y()) {}
 
     /**
-     * Implicit constructor for creating a Point from a float*
-     */
-    Point(const double* other) : Point(other[0], other[1]) {}
-
-    /**
      * to draw stuff and interface with QT
      */
     QPointF toQPointF() const { return QPointF(x(), y()); }
