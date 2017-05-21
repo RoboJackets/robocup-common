@@ -42,7 +42,7 @@ public:
     Point(const QPoint& other) : Point(other.x(), other.y()) {}
 
     /**
-     * Implicit constructor for creating a Point from a float*
+     * Implicit constructor for creating a Point from a double*
      */
     Point(const double* other) : Point(other[0], other[1]) {}
 
