@@ -174,6 +174,16 @@ public:
         }
     }
 
+    const double& operator[](int i) const {
+        if (0 == i) {
+            return _x;
+        } else if (1 == i) {
+            return _y;
+        } else {
+            throw std::out_of_range("Out of range index for Geometry2d::Point");
+        }
+    }
+
     /**
      * Hash function for Geometry2d::Point
      */
