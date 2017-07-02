@@ -164,7 +164,7 @@ public:
         return x() != other.x() || y() != other.y();
     }
 
-    double& operator[](int i) {
+    const double& operator[](int i) const {
         if (0 == i) {
             return _x;
         } else if (1 == i) {
@@ -174,14 +174,8 @@ public:
         }
     }
 
-    const double& operator[](int i) const {
-        if (0 == i) {
-            return _x;
-        } else if (1 == i) {
-            return _y;
-        } else {
-            throw std::out_of_range("Out of range index for Geometry2d::Point");
-        }
+    double& operator[](int i) {
+        return const_cast<double&>((static_cast<const Point*>(this))->operator[](i));
     }
 
     /**
