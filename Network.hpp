@@ -31,8 +31,10 @@
 static const char RefereeAddress[] = "224.5.23.1";
 static const char SharedVisionAddress[] = "224.5.23.2";
 
-static const int SimCommandPort = 8999;
-static const int SimVisionPort = 9000;
+static const int SimCommandPort = 20011;
+static const int SimVisionPort = 10020;
+static const int SimBlueStatusPort = 30011;
+static const int SimYellowStatusPort = 30012;
 
 static const int LegacyRefereePort = 10001;
 static const int ProtobufRefereePort = 10003;
@@ -54,3 +56,4 @@ static const int SharedVisionPortDoubleNew = 10006;
 
 static const int RadioRxPort = 12000;
 static const int RadioTxPort = 13000;
+
