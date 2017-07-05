@@ -4,19 +4,19 @@
 
 using namespace std;
 
-float Pid::run(const float err) {
-    if (isnan(err)) {
-        return 0;
-    }
+float Pid::run(float err, float dt) {
+    if (isnan(err) || isnan(dt) || dt == 0) return 0;
 
-    float newDErr = err - _lastErr;
-    float dErr = _dAlpha * _lastDErr + (1 - _dAlpha) * newDErr;
-    _lastDErr = newDErr;
+    // integral
+    if (!_saturated) _integral += err * dt;
 
-    _lastErr = err;
+    // derivative (with alpha filter)
+    float newDeriv = (err - _lastError) / dt; // compute newest derivative
+    float derivative = _derivAlpha * _lastDeriv + (1 - _derivAlpha) * newDeriv;
 
-    if (!_saturated)
-        _errSum += err;
+    // update our state variables
+    _lastError = _lastError;
+    _lastDeriv = newDeriv;
 
-    return (err * kp) + (_errSum * ki) + (dErr * kd);
+    return (err * kp) + (_integral * ki) + (derivative * kd);
 }
