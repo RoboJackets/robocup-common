@@ -4,23 +4,14 @@
 
 using namespace std;
 
-Pid::Pid(float p, float i, float d, unsigned int windup) : _oldErr() {
-    _errSum = 0;
-
-    _lastErr = 0;
-
-    kp = p;
-    ki = i;
-    kd = d;
-
-    _saturated = false;
-}
-
 float Pid::run(const float err) {
     if (isnan(err)) {
         return 0;
     }
-    float dErr = err - _lastErr;
+
+    float newDErr = err - _lastErr;
+    float dErr = _dAlpha * _lastDErr + (1 - _dAlpha) * newDErr;
+    _lastDErr = newDErr;
 
     _lastErr = err;
 
