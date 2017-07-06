@@ -12,11 +12,11 @@ float Pid::run(float err, float dt) {
 
     // derivative (with alpha filter)
     float newDeriv = (err - _lastError) / dt; // compute newest derivative
-    float derivative = _derivAlpha * _lastDeriv + (1 - _derivAlpha) * newDeriv;
+    float derivative = derivAlpha * _lastDeriv + (1 - derivAlpha) * newDeriv;
 
     // update our state variables
-    _lastError = _lastError;
-    _lastDeriv = newDeriv;
+    _lastError = err;
+    _lastDeriv = derivative;
 
     return (err * kp) + (_integral * ki) + (derivative * kd);
 }
