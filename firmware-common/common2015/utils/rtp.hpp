@@ -4,6 +4,20 @@
 #include <string>
 #include <vector>
 
+namespace DebugCommunication {
+    struct DebugResponseInfo {
+        DebugResponseInfo(std::string name) : name(name){};
+        std::string name;
+    };
+
+    enum DebugResponse : u_int8_t {
+        PIDError
+    };
+
+    const std::map<DebugResponse,DebugResponseInfo> RESPONSE_INFO = {
+            {PIDError, DebugResponseInfo("PIDError")}
+    };
+}
 namespace rtp {
 
 /// Max packet size.  This is limited by the CC1201 buffer size.
@@ -98,6 +112,10 @@ struct RobotStatusMessage {
 
     // 0 = good, 1 = bad
     unsigned fpgaStatus:1;
+
+    std::array<int16_t,2> debug_data;
+
+
 } __attribute__((packed));
 
 /**
