@@ -4,54 +4,19 @@
 
 using namespace std;
 
-Pid::Pid(float p, float i, float d, unsigned int windup) : _oldErr() {
-    _windupLoc = 0;
-    _errSum = 0;
+float Pid::run(float err, float dt) {
+    if (isnan(err) || isnan(dt) || dt == 0) return 0;
 
-    _lastErr = 0;
+    // integral
+    if (!_saturated) _integral += err * dt;
 
-    kp = p;
-    ki = i;
-    kd = d;
+    // derivative (with alpha filter)
+    float newDeriv = (err - _lastError) / dt; // compute newest derivative
+    float derivative = derivAlpha * _lastDeriv + (1 - derivAlpha) * newDeriv;
 
-    _windup = 0;
-    setWindup(windup);
-}
+    // update our state variables
+    _lastError = err;
+    _lastDeriv = derivative;
 
-void Pid::setWindup(unsigned int w) {
-    if (w != _windup) {
-        _windup = w;
-
-        if (w > 0) {
-            _oldErr.resize(w);
-            _errSum = 0;
-            std::fill(_oldErr.begin(), _oldErr.end(), 0);
-        } else {
-            _oldErr.clear();
-        }
-    }
-}
-
-float Pid::run(const float err) {
-    if (isnan(err)) {
-        return 0;
-    }
-    float dErr = err - _lastErr;
-    _lastErr = err;
-
-    _errSum += err;
-
-    if (_windup > 0) {
-        _errSum -= _oldErr[_windupLoc];
-        _oldErr[_windupLoc] = err;
-
-        _windupLoc = (_windupLoc + 1) % _windup;
-    }
-
-    return (err * kp) + (_errSum * ki) + (dErr * kd);
-}
-
-void Pid::clearWindup() {
-    _errSum = 0;
-    std::fill(_oldErr.begin(), _oldErr.end(), 0);
+    return (err * kp) + (_integral * ki) + (derivative * kd);
 }
