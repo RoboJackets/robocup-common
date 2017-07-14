@@ -11,12 +11,32 @@ namespace DebugCommunication {
         std::string name;
     };
 
-    enum DebugResponse {
-        PIDError
+    enum DebugResponse: uint8_t  {
+        DEBUG_RESPONSE_NONE=0,
+        PIDError0 = 1,
+        PIDError1,
+        PIDError2,
+        PIDError3,
+        DEBUG_RESPONSE_LAST_PLACEHOLDER
     };
 
     const std::map<DebugResponse,DebugResponseInfo> RESPONSE_INFO = {
-            {PIDError, DebugResponseInfo("PIDError")}
+            {DebugResponse::PIDError0, DebugResponseInfo("PIDError0")},
+            {DebugResponse::PIDError1, DebugResponseInfo("PIDError1")},
+            {DebugResponse::PIDError2, DebugResponseInfo("PIDError2")},
+            {DebugResponse::PIDError3, DebugResponseInfo("PIDError3")}
+    };
+
+
+    enum ConfigCommunication: uint8_t {
+        CONFIG_COMMUNICATION_NONE=0,
+        PID_P=1, PID_I, PID_D, CONFIG_COMMUNICATION_LAST_PLACEHOLDER
+    };
+
+    const std::map<std::string,ConfigCommunication> NAME_TO_CONFIG = {
+        {"PID_P", ConfigCommunication::PID_P},
+        {"PID_I", ConfigCommunication::PID_I},
+        {"PID_D", ConfigCommunication::PID_D}
     };
 }
 
@@ -71,7 +91,7 @@ struct ControlMessage {
      */
     static constexpr auto VELOCITY_SCALE_FACTOR = 1000;
 
-    uint8_t uid;
+//    uint8_t uid;
     int16_t bodyX;
     int16_t bodyY;
     int16_t bodyW;
@@ -79,10 +99,49 @@ struct ControlMessage {
     uint8_t kickStrength;
     unsigned shootMode : 1;    // 0 = kick, 1 = chip
     unsigned triggerMode : 2;  // 0 = off, 1 = immediate, 2 = on break beam
-    unsigned song : 2;         // 0 = stop, 1 = continue, 2 = GT fight song
+//    unsigned debugStuff : 5;
+//    unsigned song : 2;         // 0 = stop, 1 = continue, 2 = GT fight song
 } __attribute__((packed));
-static_assert(sizeof(ControlMessage) == 10,
+static_assert(sizeof(ControlMessage) == 9,
               "sizeof(ControlMessage) is not what we expect");
+
+struct ConfMessage {
+    static constexpr size_t length = 3;
+
+    std::array<DebugCommunication::ConfigCommunication, length> keys{};
+    std::array<int16_t, length> values{};
+} __attribute__((packed));
+static_assert(sizeof(ConfMessage) == 9,
+              "sizeof(ConfMessage) is not what we expect");
+
+struct DebugMessage {
+    static constexpr size_t length = 3;
+    std::array<DebugCommunication::DebugResponse, 3> keys;
+};
+
+static_assert(sizeof(DebugMessage) == 3,
+              "sizeof(DebugMessage) is not what we expect");
+
+struct RobotTxMessage {
+    unsigned uid : 6;
+    enum{ControlMessageType, ConfMessageType, DebugMessageType} messageType : 2;
+
+    union RobotTxMessages {
+        ControlMessage controlMessage;
+        ConfMessage confMessage;
+        DebugMessage debugMessage;
+    } message;
+
+} __attribute__((packed));
+
+
+//
+//template<int s, int t> struct check_size {
+//    static_assert(s == t, "wrong size");
+//};
+//check_size<sizeof(RobotTxMessage), 10> ch;
+static_assert(sizeof(RobotTxMessage) == 10,
+              "sizeof(RobotTxMessage) is not what we expect");
 
 struct RobotStatusMessage {
     /** @battVoltage is a direct reading from the mbed's ADC and is sent over
@@ -99,14 +158,16 @@ struct RobotStatusMessage {
     unsigned ballSenseStatus : 1;  // 0 = no-ball, 1 = has-ball
     unsigned kickStatus : 1;       // 0 = uncharged, 1 = charged
     unsigned fpgaStatus : 1;       // 0 = good, 1 = error
-    std::array<int16_t,3> debug_data;
+
+    static constexpr size_t debug_data_length = 3;
+    std::array<int16_t,debug_data_length> debug_data;
 } __attribute__((packed));
 static_assert(sizeof(RobotStatusMessage) == 9,
               "sizeof(RobotStatusMessage) is not what we expect");
 
 // Packet sizes
 static constexpr auto HeaderSize = sizeof(Header);
-static constexpr auto ForwardSize = HeaderSize + 6 * sizeof(ControlMessage);
+static constexpr auto ForwardSize = HeaderSize + 6 * sizeof(RobotTxMessage);
 static constexpr auto ReverseSize = HeaderSize + sizeof(RobotStatusMessage);
 
 /**

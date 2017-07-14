@@ -90,18 +90,6 @@ static bool ballIsInTheirGoalieBox(Geometry2d::Point& pt) {
     return ballIsInGoalieBox(converted);
 }
 
-/** Returns @value if it is in bounds, otherwise returns the bound it is closest
- * to */
-template <class T>
-float clamp(T value, T min, T max) {
-    if (value > max) {
-        return max;
-    } else if (value < min) {
-        return min;
-    }
-    return value;
-}
-
 // Removes all entries in a std::map which associate to the given value.
 template <class Map_Type, class Data_Type>
 void map_remove(Map_Type& map, Data_Type& value) {

@@ -36,3 +36,15 @@ static const float FLOAT_EPSILON = 0.00001;
 static bool nearlyEqual(float a, float b) {
     return std::fabs(a - b) < FLOAT_EPSILON;
 }
+
+/** Returns @value if it is in bounds, otherwise returns the bound it is closest
+ * to */
+template <class T>
+float clamp(T value, T min, T max) {
+    if (value > max) {
+        return max;
+    } else if (value < min) {
+        return min;
+    }
+    return value;
+}
