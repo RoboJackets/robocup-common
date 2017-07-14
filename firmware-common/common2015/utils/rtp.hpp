@@ -51,7 +51,7 @@ constexpr uint8_t LOOPBACK_ADDRESS = 2;
 
 // The value 0 is a valid robot id, so we have to choose something else to
 // represent "null"
-constexpr uint8_t INVALID_ROBOT_UID = 0xFF;
+constexpr auto INVALID_ROBOT_UID = 0b111111;
 
 template <typename PACKET_TYPE>
 void serializeToVector(const PACKET_TYPE& pkt, std::vector<uint8_t>* buf) {
@@ -100,7 +100,7 @@ struct ControlMessage {
     unsigned shootMode : 1;    // 0 = kick, 1 = chip
     unsigned triggerMode : 2;  // 0 = off, 1 = immediate, 2 = on break beam
 //    unsigned debugStuff : 5;
-//    unsigned song : 2;         // 0 = stop, 1 = continue, 2 = GT fight song
+    unsigned song : 2;         // 0 = stop, 1 = continue, 2 = GT fight song
 } __attribute__((packed));
 static_assert(sizeof(ControlMessage) == 9,
               "sizeof(ControlMessage) is not what we expect");
