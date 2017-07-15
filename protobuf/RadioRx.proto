@@ -43,7 +43,7 @@ message Quaternion
 message DebugResponses
 {
     optional string key = 1;
-    optional int32 value = 2;
+    optional float value = 2;
 }
 
 // Packet going out from radio program to control program
