@@ -52,6 +52,7 @@ constexpr uint8_t LOOPBACK_ADDRESS = 2;
 // The value 0 is a valid robot id, so we have to choose something else to
 // represent "null"
 constexpr auto INVALID_ROBOT_UID = 0b111111;
+constexpr auto ANY_ROBOT_UID = 0b111111 - 1;
 
 template <typename PACKET_TYPE>
 void serializeToVector(const PACKET_TYPE& pkt, std::vector<uint8_t>* buf) {
