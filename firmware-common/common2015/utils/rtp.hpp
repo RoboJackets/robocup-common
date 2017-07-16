@@ -11,7 +11,7 @@ namespace DebugCommunication {
         std::string name;
     };
 
-    enum DebugResponse: uint8_t  {
+    enum DebugResponse: uint8_t {
         DEBUG_RESPONSE_NONE=0,
         PIDError0 = 1,
         PIDError1,
@@ -21,12 +21,19 @@ namespace DebugCommunication {
     };
 
     const std::map<DebugResponse,DebugResponseInfo> RESPONSE_INFO = {
-            {DebugResponse::PIDError0, DebugResponseInfo("PIDError0")},
-            {DebugResponse::PIDError1, DebugResponseInfo("PIDError1")},
-            {DebugResponse::PIDError2, DebugResponseInfo("PIDError2")},
-            {DebugResponse::PIDError3, DebugResponseInfo("PIDError3")}
+        {DebugResponse::PIDError0, DebugResponseInfo("PIDError0")},
+        {DebugResponse::PIDError1, DebugResponseInfo("PIDError1")},
+        {DebugResponse::PIDError2, DebugResponseInfo("PIDError2")},
+        {DebugResponse::PIDError3, DebugResponseInfo("PIDError3")}
     };
 
+    const std::map<std::string ,DebugResponse> STRING_TO_DEBUGRESPONSE = [](){
+        std::map<std::string ,DebugResponse> m{};
+        for (const auto& pair: RESPONSE_INFO) {
+            m[pair.second.name] = pair.first;
+        }
+        return m;
+    }();
 
     enum ConfigCommunication: uint8_t {
         CONFIG_COMMUNICATION_NONE=0,
@@ -38,6 +45,14 @@ namespace DebugCommunication {
         {"PID_I", ConfigCommunication::PID_I},
         {"PID_D", ConfigCommunication::PID_D}
     };
+
+    const std::array<std::string, ConfigCommunication::CONFIG_COMMUNICATION_LAST_PLACEHOLDER> CONFIG_TO_NAME = [](){
+        std::array<std::string, ConfigCommunication::CONFIG_COMMUNICATION_LAST_PLACEHOLDER> arr{};
+        for (const auto& pair: NAME_TO_CONFIG) {
+            arr[pair.second] = pair.first;
+        }
+        return arr;
+    }();
 }
 
 namespace rtp {
