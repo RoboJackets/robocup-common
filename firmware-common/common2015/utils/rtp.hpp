@@ -56,19 +56,39 @@ namespace DebugCommunication {
         PID_P=1, PID_I, PID_D, CONFIG_COMMUNICATION_LAST_PLACEHOLDER
     };
 
-    const std::map<std::string,ConfigCommunication> NAME_TO_CONFIG = {
-        {"PID_P", ConfigCommunication::PID_P},
-        {"PID_I", ConfigCommunication::PID_I},
-        {"PID_D", ConfigCommunication::PID_D}
+    struct ConfigCommunicationInfo {
+        ConfigCommunicationInfo(std::string name, float scaling_factor) : name(name), scaling_factor(scaling_factor){};
+        std::string name;
+        float scaling_factor;
     };
 
-    const std::array<std::string, ConfigCommunication::CONFIG_COMMUNICATION_LAST_PLACEHOLDER> CONFIG_TO_NAME = [](){
-        std::array<std::string, ConfigCommunication::CONFIG_COMMUNICATION_LAST_PLACEHOLDER> arr{};
-        for (const auto& pair: NAME_TO_CONFIG) {
-            arr[pair.second] = pair.first;
+    const std::map<ConfigCommunication,ConfigCommunicationInfo> CONFIG_TO_INFO = {
+            {ConfigCommunication::PID_P, ConfigCommunicationInfo("PID_P", 1000.0f)},
+            {ConfigCommunication::PID_I, ConfigCommunicationInfo("PID_I", 1000.0f)},
+            {ConfigCommunication::PID_D, ConfigCommunicationInfo("PID_D", 1000.0f)}
+    };
+
+    const std::map<std::string,ConfigCommunication> NAME_TO_CONFIG = [](){
+        std::map<std::string ,ConfigCommunication> m{};
+        for (const auto& pair: CONFIG_TO_INFO) {
+            m[pair.second.name] = pair.first;
         }
-        return arr;
+        return m;
     }();
+
+    static int16_t configToValue(ConfigCommunication configCommunication, float value) {
+        value*=CONFIG_TO_INFO.at(configCommunication).scaling_factor;
+        if (value>std::numeric_limits<int16_t>::max()) {
+            return std::numeric_limits<int16_t>::max();
+        } else if (value < std::numeric_limits<int16_t>::min()) {
+            return std::numeric_limits<int16_t>::min();
+        }
+        return static_cast<int16_t>(value);
+    };
+
+    static float configValueToFloat(ConfigCommunication configCommunication, int16_t value) {
+        return value/CONFIG_TO_INFO.at(configCommunication).scaling_factor;
+    }
 }
 
 namespace rtp {
