@@ -4,11 +4,13 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <limits>
 
 namespace DebugCommunication {
     struct DebugResponseInfo {
-        DebugResponseInfo(std::string name) : name(name){};
+        DebugResponseInfo(std::string name, float scaling_factor) : name(name), scaling_factor(scaling_factor){};
         std::string name;
+        float scaling_factor;
     };
 
     enum DebugResponse: uint8_t {
@@ -21,10 +23,10 @@ namespace DebugCommunication {
     };
 
     const std::map<DebugResponse,DebugResponseInfo> RESPONSE_INFO = {
-        {DebugResponse::PIDError0, DebugResponseInfo("PIDError0")},
-        {DebugResponse::PIDError1, DebugResponseInfo("PIDError1")},
-        {DebugResponse::PIDError2, DebugResponseInfo("PIDError2")},
-        {DebugResponse::PIDError3, DebugResponseInfo("PIDError3")}
+        {DebugResponse::PIDError0, DebugResponseInfo("PIDError0", 1000.0f)},
+        {DebugResponse::PIDError1, DebugResponseInfo("PIDError1", 1000.0f)},
+        {DebugResponse::PIDError2, DebugResponseInfo("PIDError2", 1000.0f)},
+        {DebugResponse::PIDError3, DebugResponseInfo("PIDError3", 1000.0f)}
     };
 
     const std::map<std::string ,DebugResponse> STRING_TO_DEBUGRESPONSE = [](){
@@ -34,6 +36,20 @@ namespace DebugCommunication {
         }
         return m;
     }();
+    
+    static int16_t debugResponseToValue(DebugResponse debugResponse, float value) {
+        value*=RESPONSE_INFO.at(debugResponse).scaling_factor;
+        if (value>std::numeric_limits<int16_t>::max()) {
+            return std::numeric_limits<int16_t>::max();
+        } else if (value < std::numeric_limits<int16_t>::min()) {
+            return std::numeric_limits<int16_t>::min();
+        }
+        return static_cast<int16_t>(value);
+    };
+
+    static float debugResponseValueToFloat(DebugResponse debugResponse, int16_t value) {
+        return value/RESPONSE_INFO.at(debugResponse).scaling_factor;
+    }
 
     enum ConfigCommunication: uint8_t {
         CONFIG_COMMUNICATION_NONE=0,
