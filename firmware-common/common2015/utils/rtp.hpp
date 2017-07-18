@@ -34,35 +34,46 @@ namespace DebugCommunication {
         DEBUG_RESPONSE_LAST_PLACEHOLDER
     };
 
-    const std::map<DebugResponse,DebugResponseInfo> RESPONSE_INFO = {
-        {DebugResponse::PIDError0, DebugResponseInfo("PIDError0", 1000.0f)},
-        {DebugResponse::PIDError1, DebugResponseInfo("PIDError1", 1000.0f)},
-        {DebugResponse::PIDError2, DebugResponseInfo("PIDError2", 1000.0f)},
-        {DebugResponse::PIDError3, DebugResponseInfo("PIDError3", 1000.0f)},
-        {DebugResponse::MotorDuty0, DebugResponseInfo("MotorDuty0", 1)},
-        {DebugResponse::MotorDuty1, DebugResponseInfo("MotorDuty1", 1)},
-        {DebugResponse::MotorDuty2, DebugResponseInfo("MotorDuty2", 1)},
-        {DebugResponse::MotorDuty3, DebugResponseInfo("MotorDuty3", 1)},
-        {DebugResponse::WheelVel0, DebugResponseInfo("WheelVel0", 1000.0f)},
-        {DebugResponse::WheelVel1, DebugResponseInfo("WheelVel1", 1000.0f)},
-        {DebugResponse::WheelVel2, DebugResponseInfo("WheelVel2", 1000.0f)},
-        {DebugResponse::WheelVel3, DebugResponseInfo("WheelVel3", 1000.0f)},
-        {DebugResponse::StallCounter0, DebugResponseInfo("StallCounter0", 1)},
-        {DebugResponse::StallCounter1, DebugResponseInfo("StallCounter1", 1)},
-        {DebugResponse::StallCounter2, DebugResponseInfo("StallCounter2", 1)},
-        {DebugResponse::StallCounter3, DebugResponseInfo("StallCounter3", 1)},
+
+    const std::array<std::pair<DebugResponse, float>,DEBUG_RESPONSE_LAST_PLACEHOLDER> RESPONSE_INFO= {
+        std::make_pair(DebugResponse::PIDError0, 1000.0),
+        std::make_pair(DebugResponse::PIDError1, 1000.0),
+        std::make_pair(DebugResponse::PIDError2, 1000.0),
+        std::make_pair(DebugResponse::PIDError3, 1000.0),
+        std::make_pair(DebugResponse::MotorDuty0, 1),
+        std::make_pair(DebugResponse::MotorDuty1, 1),
+        std::make_pair(DebugResponse::MotorDuty2, 1),
+        std::make_pair(DebugResponse::MotorDuty3, 1),
+        std::make_pair(DebugResponse::WheelVel0, 1000.0),
+        std::make_pair(DebugResponse::WheelVel1, 1000.0),
+        std::make_pair(DebugResponse::WheelVel2, 1000.0),
+        std::make_pair(DebugResponse::WheelVel3, 1000.0),
+        std::make_pair(DebugResponse::StallCounter0, 1),
+        std::make_pair(DebugResponse::StallCounter1, 1),
+        std::make_pair(DebugResponse::StallCounter2, 1),
+        std::make_pair(DebugResponse::StallCounter3, 1)
     };
 
-    const std::map<std::string ,DebugResponse> STRING_TO_DEBUGRESPONSE = [](){
-        std::map<std::string ,DebugResponse> m{};
+    const std::array<float, DEBUG_RESPONSE_LAST_PLACEHOLDER> RESPONSE_TO_SCALING_FACTOR = [](){
+        std::array<float, DEBUG_RESPONSE_LAST_PLACEHOLDER> a{};
         for (const auto& pair: RESPONSE_INFO) {
-            m[pair.second.name] = pair.first;
+            if (pair.first!=DebugResponse::DEBUG_RESPONSE_NONE) {
+                a[pair.first] = pair.second;
+            }
         }
-        return m;
+        return a;
     }();
-    
+
+    // const std::map<std::string ,DebugResponse> STRING_TO_DEBUGRESPONSE = [](){
+    //     std::map<std::string ,DebugResponse> m{};
+    //     for (const auto& pair: RESPONSE_INFO) {
+    //         m[pair.second.name] = pair.first;
+    //     }
+    //     return m;
+    // }();
+
     static int16_t debugResponseToValue(DebugResponse debugResponse, float value) {
-        value*=RESPONSE_INFO.at(debugResponse).scaling_factor;
+        value*=RESPONSE_TO_SCALING_FACTOR[debugResponse];
         if (value>std::numeric_limits<int16_t>::max()) {
             return std::numeric_limits<int16_t>::max();
         } else if (value < std::numeric_limits<int16_t>::min()) {
@@ -72,7 +83,7 @@ namespace DebugCommunication {
     };
 
     static float debugResponseValueToFloat(DebugResponse debugResponse, int16_t value) {
-        return value/RESPONSE_INFO.at(debugResponse).scaling_factor;
+        return value/RESPONSE_TO_SCALING_FACTOR[debugResponse];
     }
 
     enum ConfigCommunication: uint8_t {
