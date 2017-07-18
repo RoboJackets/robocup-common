@@ -79,13 +79,8 @@ void Pid::runTuner() {
 bool Pid::endTunerCycle() {
     if(_tuner->endCycle()) {
         return true;
-    }
-    else {
+    } else {
         setFromTuner();
         return false;
     }
 }
-
-
-
-

@@ -37,17 +37,17 @@ void PidTuner::startCycle() {
         _testSets.push_back(_currentPid);
 
         _testSets.push_back(PidSet(_currentPid.p + _pScale, _currentPid.i, _currentPid.d));
-        if(_currentPid.p - _pScale >= 0){
+        if(_currentPid.p - _pScale >= 0) {
             _testSets.push_back(PidSet(_currentPid.p - _pScale, _currentPid.i, _currentPid.d));
         }
 
         _testSets.push_back(PidSet(_currentPid.p, _currentPid.i + _iScale, _currentPid.d));
-        if( _currentPid.i - _iScale > 0){
+        if( _currentPid.i - _iScale > 0) {
             _testSets.push_back(PidSet(_currentPid.p, _currentPid.i - _iScale, _currentPid.d));
         }
 
         _testSets.push_back(PidSet(_currentPid.p, _currentPid.i, _currentPid.d + _dScale));
-        if( _currentPid.d - _dScale > 0){
+        if( _currentPid.d - _dScale > 0) {
             _testSets.push_back(PidSet(_currentPid.p, _currentPid.i, _currentPid.d - _dScale));
         }
 
@@ -65,10 +65,13 @@ void PidTuner::run(float err) {
 bool PidTuner::endCycle() {
     _testSets[_testNum] = _currentPid;
     _testNum += 1;
+
     std::cout<<_currentPid.p<<" | "<<_currentPid.i<<" | "<<_currentPid.d<<std::endl;
     std::cout<<_currentPid.score<<std::endl;
+
     if(_testNum==_testSets.size()) {
         std::cout<<"---------------------------"<<std::endl;
+
         //finished testing set, determine best pid, then check if we need more tests
         _cycles += 1;
 
@@ -88,6 +91,7 @@ bool PidTuner::endCycle() {
         //Don't actually need to include bestPid in testSet
         _testSets.pop_back();
 
+        //Scales the test step down and reverses the direction
         //_pScale *= _testSets[0].score > _testSets[1].score ? 1 : -1/_overScale;
         //_iScale *= _testSets[0].score > _testSets[2].score ? 1 : -1/_overScale;
         //_dScale *= _testSets[0].score > _testSets[3].score ? 1 : -1/_overScale;
