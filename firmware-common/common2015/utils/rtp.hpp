@@ -19,6 +19,18 @@ namespace DebugCommunication {
         PIDError1,
         PIDError2,
         PIDError3,
+        MotorDuty0,
+        MotorDuty1,
+        MotorDuty2,
+        MotorDuty3,
+        WheelVel0,
+        WheelVel1,
+        WheelVel2,
+        WheelVel3,
+        StallCounter0,
+        StallCounter1,
+        StallCounter2,
+        StallCounter3,
         DEBUG_RESPONSE_LAST_PLACEHOLDER
     };
 
@@ -26,7 +38,19 @@ namespace DebugCommunication {
         {DebugResponse::PIDError0, DebugResponseInfo("PIDError0", 1000.0f)},
         {DebugResponse::PIDError1, DebugResponseInfo("PIDError1", 1000.0f)},
         {DebugResponse::PIDError2, DebugResponseInfo("PIDError2", 1000.0f)},
-        {DebugResponse::PIDError3, DebugResponseInfo("PIDError3", 1000.0f)}
+        {DebugResponse::PIDError3, DebugResponseInfo("PIDError3", 1000.0f)},
+        {DebugResponse::MotorDuty0, DebugResponseInfo("MotorDuty0", 1)},
+        {DebugResponse::MotorDuty1, DebugResponseInfo("MotorDuty1", 1)},
+        {DebugResponse::MotorDuty2, DebugResponseInfo("MotorDuty2", 1)},
+        {DebugResponse::MotorDuty3, DebugResponseInfo("MotorDuty3", 1)},
+        {DebugResponse::WheelVel0, DebugResponseInfo("WheelVel0", 1000.0f)},
+        {DebugResponse::WheelVel1, DebugResponseInfo("WheelVel1", 1000.0f)},
+        {DebugResponse::WheelVel2, DebugResponseInfo("WheelVel2", 1000.0f)},
+        {DebugResponse::WheelVel3, DebugResponseInfo("WheelVel3", 1000.0f)},
+        {DebugResponse::StallCounter0, DebugResponseInfo("StallCounter0", 1)},
+        {DebugResponse::StallCounter1, DebugResponseInfo("StallCounter1", 1)},
+        {DebugResponse::StallCounter2, DebugResponseInfo("StallCounter2", 1)},
+        {DebugResponse::StallCounter3, DebugResponseInfo("StallCounter3", 1)},
     };
 
     const std::map<std::string ,DebugResponse> STRING_TO_DEBUGRESPONSE = [](){
