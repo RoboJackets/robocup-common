@@ -7,11 +7,6 @@
 #include <limits>
 
 namespace DebugCommunication {
-    struct DebugResponseInfo {
-        DebugResponseInfo(std::string name, float scaling_factor) : name(name), scaling_factor(scaling_factor){};
-        std::string name;
-        float scaling_factor;
-    };
 
     enum DebugResponse: uint8_t {
         DEBUG_RESPONSE_NONE=0,
@@ -34,8 +29,7 @@ namespace DebugCommunication {
         DEBUG_RESPONSE_LAST_PLACEHOLDER
     };
 
-
-    const std::array<std::pair<DebugResponse, float>,DEBUG_RESPONSE_LAST_PLACEHOLDER> RESPONSE_INFO= {
+    constexpr std::array<std::pair<DebugResponse, float>,DEBUG_RESPONSE_LAST_PLACEHOLDER-1> RESPONSE_INFO= {
         std::make_pair(DebugResponse::PIDError0, 1000.0),
         std::make_pair(DebugResponse::PIDError1, 1000.0),
         std::make_pair(DebugResponse::PIDError2, 1000.0),
@@ -54,6 +48,8 @@ namespace DebugCommunication {
         std::make_pair(DebugResponse::StallCounter3, 1)
     };
 
+    static_assert(RESPONSE_INFO.size() == DEBUG_RESPONSE_LAST_PLACEHOLDER-1, "Enums missing from RESPONSE_INFO");
+
     const std::array<float, DEBUG_RESPONSE_LAST_PLACEHOLDER> RESPONSE_TO_SCALING_FACTOR = [](){
         std::array<float, DEBUG_RESPONSE_LAST_PLACEHOLDER> a{};
         for (const auto& pair: RESPONSE_INFO) {
@@ -63,14 +59,6 @@ namespace DebugCommunication {
         }
         return a;
     }();
-
-    // const std::map<std::string ,DebugResponse> STRING_TO_DEBUGRESPONSE = [](){
-    //     std::map<std::string ,DebugResponse> m{};
-    //     for (const auto& pair: RESPONSE_INFO) {
-    //         m[pair.second.name] = pair.first;
-    //     }
-    //     return m;
-    // }();
 
     static int16_t debugResponseToValue(DebugResponse debugResponse, float value) {
         value*=RESPONSE_TO_SCALING_FACTOR[debugResponse];
@@ -91,28 +79,26 @@ namespace DebugCommunication {
         PID_P=1, PID_I, PID_D, CONFIG_COMMUNICATION_LAST_PLACEHOLDER
     };
 
-    struct ConfigCommunicationInfo {
-        ConfigCommunicationInfo(std::string name, float scaling_factor) : name(name), scaling_factor(scaling_factor){};
-        std::string name;
-        float scaling_factor;
+    constexpr std::array<std::pair<ConfigCommunication, float>,CONFIG_COMMUNICATION_LAST_PLACEHOLDER-1> CONFIG_INFO = {
+            std::make_pair(ConfigCommunication::PID_P, 1000.0f),
+            std::make_pair(ConfigCommunication::PID_I, 1000.0f),
+            std::make_pair(ConfigCommunication::PID_D, 1000.0f)
     };
 
-    const std::map<ConfigCommunication,ConfigCommunicationInfo> CONFIG_TO_INFO = {
-            {ConfigCommunication::PID_P, ConfigCommunicationInfo("PID_P", 1000.0f)},
-            {ConfigCommunication::PID_I, ConfigCommunicationInfo("PID_I", 1000.0f)},
-            {ConfigCommunication::PID_D, ConfigCommunicationInfo("PID_D", 1000.0f)}
-    };
+    static_assert(CONFIG_INFO.size() == CONFIG_COMMUNICATION_LAST_PLACEHOLDER-1, "Enums missing from CONFIG_INFO");
 
-    const std::map<std::string,ConfigCommunication> NAME_TO_CONFIG = [](){
-        std::map<std::string ,ConfigCommunication> m{};
-        for (const auto& pair: CONFIG_TO_INFO) {
-            m[pair.second.name] = pair.first;
+    const std::array<float, CONFIG_COMMUNICATION_LAST_PLACEHOLDER> CONFIG_TO_SCALING_FACTOR = [](){
+        std::array<float, CONFIG_COMMUNICATION_LAST_PLACEHOLDER> a{};
+        for (const auto& pair: CONFIG_INFO) {
+            if (pair.first!=ConfigCommunication::CONFIG_COMMUNICATION_LAST_PLACEHOLDER) {
+                a[pair.first] = pair.second;
+            }
         }
-        return m;
+        return a;
     }();
 
     static int16_t configToValue(ConfigCommunication configCommunication, float value) {
-        value*=CONFIG_TO_INFO.at(configCommunication).scaling_factor;
+        value*=CONFIG_TO_SCALING_FACTOR[configCommunication];
         if (value>std::numeric_limits<int16_t>::max()) {
             return std::numeric_limits<int16_t>::max();
         } else if (value < std::numeric_limits<int16_t>::min()) {
@@ -122,7 +108,7 @@ namespace DebugCommunication {
     };
 
     static float configValueToFloat(ConfigCommunication configCommunication, int16_t value) {
-        return value/CONFIG_TO_INFO.at(configCommunication).scaling_factor;
+        return value/CONFIG_TO_SCALING_FACTOR[configCommunication];
     }
 }
 
