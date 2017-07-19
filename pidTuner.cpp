@@ -85,8 +85,7 @@ bool PidTuner::endCycle() {
         }
 
         //Find the set with the lowest score
-        _bestPid = *(std::min_element(std::begin(_testSets),std::end(_testSets),
-            [] (PidSet const& p1, PidSet const& p2){ return p1.score < p2.score;}));
+        _bestPid = *(std::min_element(std::begin(_testSets),std::end(_testSets)));
 
         //Don't actually need to include bestPid in testSet
         _testSets.pop_back();

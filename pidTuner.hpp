@@ -45,6 +45,9 @@ private:
         inline bool operator==(const PidSet& pidIn) {
             return (p == pidIn.p) && (i == pidIn.i) && (d == pidIn.d);
         }
+        inline bool operator<(const PidSet& pidIn) {
+          return (score < pidIn.score);
+        }
         float p;
         float i;
         float d;
@@ -68,4 +71,3 @@ private:
 
     std::vector <PidSet> _testSets;
 };
-
