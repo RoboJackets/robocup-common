@@ -17,6 +17,7 @@ void Pid::setWindup(unsigned int w) {
         if (w > 0) {
             _oldErr.resize(w);
             _errSum = 0;
+            _windupLoc = _windupLoc % _windup;
             std::fill(_oldErr.begin(), _oldErr.end(), 0);
         } else {
             _oldErr.clear();
@@ -29,13 +30,13 @@ float Pid::run(const float err, float dt) {
 
     float integralErr;
     // integral
-    if (_saturated) {
-        integralErr = err *dt;
+    if (!_saturated) {
+        integralErr = err;
     } else {
         integralErr = 0;
     }
 
-    _errSum += err;
+    _errSum += integralErr;
 
     if (_windup > 0) {
         _errSum -= _oldErr[_windupLoc];
@@ -45,14 +46,17 @@ float Pid::run(const float err, float dt) {
     }
 
     // derivative (with alpha filter)
-    float newDeriv = (err - _lastError) / dt; // compute newest derivative
+    float newDeriv = (err - _lastError); // compute newest derivative
     float derivative = derivAlpha * _lastDeriv + (1 - derivAlpha) * newDeriv;
 
     // update our state variables
     _lastError = err;
     _lastDeriv = derivative;
-
-    return (err * kp) + (_errSum * ki) + (derivative * kd);
+    if (_windup>0) {
+        return (err * kp) + (_errSum * ki)/_windup + (derivative * kd);
+    } else {
+        return (err * kp) + (_errSum * ki) + (derivative * kd);
+    }
 }
 
 void Pid::clearWindup() {

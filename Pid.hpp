@@ -33,7 +33,7 @@ private:
 
     float _lastDeriv;
 
-    std::vector<float> _oldErr;
+    std::vector<float> _oldErr{};
     /* [0, 1] -> [all new data, all old data] */
 
     bool _saturated;
