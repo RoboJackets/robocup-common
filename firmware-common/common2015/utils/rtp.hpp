@@ -26,6 +26,10 @@ namespace DebugCommunication {
         StallCounter1,
         StallCounter2,
         StallCounter3,
+        TargetWheelVel0,
+        TargetWheelVel1,
+        TargetWheelVel2,
+        TargetWheelVel3,
         DEBUG_RESPONSE_LAST_PLACEHOLDER
     };
 
@@ -45,7 +49,11 @@ namespace DebugCommunication {
         std::make_pair(DebugResponse::StallCounter0, 1),
         std::make_pair(DebugResponse::StallCounter1, 1),
         std::make_pair(DebugResponse::StallCounter2, 1),
-        std::make_pair(DebugResponse::StallCounter3, 1)
+        std::make_pair(DebugResponse::StallCounter3, 1),
+        std::make_pair(DebugResponse::TargetWheelVel0, 100),
+        std::make_pair(DebugResponse::TargetWheelVel1, 100),
+        std::make_pair(DebugResponse::TargetWheelVel2, 100),
+        std::make_pair(DebugResponse::TargetWheelVel3, 100)
     };
 
     static_assert(RESPONSE_INFO.size() == DEBUG_RESPONSE_LAST_PLACEHOLDER-1, "Enums missing from RESPONSE_INFO");
