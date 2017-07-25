@@ -28,3 +28,6 @@ const float Robot_MouthWidth = 0.10f;
 const float Dots_Small_Offset = 0.035;
 const float Dots_Large_Offset = 0.054772;
 const float Dots_Radius = 0.02;
+
+const std::string Team_Name_Lower = "robojackets";
+const std::string Team_Name = "RoboJackets";
