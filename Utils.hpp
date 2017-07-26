@@ -22,6 +22,12 @@ inline void debugLog(const std::exception& e) {
     std::cerr << e.what() << std::endl;
 }
 
+inline void debugLogIf(const std::string& e, bool condition) {
+    if (condition) {
+        debugLog(e);
+    }
+}
+
 template <class T,
           typename std::enable_if<std::is_base_of<std::exception, T>::value,
                                   int>::type = 0>
