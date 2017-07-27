@@ -238,12 +238,13 @@ struct RobotStatusMessage {
     unsigned motorErrors : 5;      // 0 = good, 1 = error
     unsigned ballSenseStatus : 1;  // 0 = no-ball, 1 = has-ball
     unsigned kickStatus : 1;       // 0 = uncharged, 1 = charged
+    unsigned kickHealthy : 1;       // 0 = unhealthy, 1 = healthy
     unsigned fpgaStatus : 1;       // 0 = good, 1 = error
 
     static constexpr size_t debug_data_length = 0;
 //    std::array<int16_t,debug_data_length> debug_data;
 } __attribute__((packed));
-static_assert(sizeof(RobotStatusMessage) == 3,
+static_assert(sizeof(RobotStatusMessage) == 4,
               "sizeof(RobotStatusMessage) is not what we expect");
 
 // Packet sizes
