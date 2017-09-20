@@ -34,7 +34,7 @@ if(APPLE)
     # look for the homebrew-installed version of Qt5
     find_package(Qt5Widgets
         REQUIRED
-        PATHS /usr/local/Cellar/qt5/*)
+        PATHS /usr/local/Cellar/qt/* /usr/local/Cellar/qt5/*)
 
     # this directory is included by default, but we mark it as SYSTEM so
     # warnings in external headers don't show up every time we build
