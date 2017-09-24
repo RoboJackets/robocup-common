@@ -1,6 +1,6 @@
 #pragma once
 
-#include "firmware-common/common2015/utils/rtp.hpp"
+#include "firmware-common/rtp.hpp"
 
 namespace DebugCommunication {
     const std::map<DebugResponse,std::string> DEBUGRESPONSE_TO_STRING = {
@@ -19,7 +19,7 @@ namespace DebugCommunication {
             {DebugResponse::StallCounter0, "StallCounter0"},
             {DebugResponse::StallCounter1, "StallCounter1"},
             {DebugResponse::StallCounter2, "StallCounter2"},
-            {DebugResponse::StallCounter3, "StallCounter3"}, 
+            {DebugResponse::StallCounter3, "StallCounter3"},
             {DebugResponse::TargetWheelVel0, "TargetWheelVel0"},
             {DebugResponse::TargetWheelVel1, "TargetWheelVel1"},
             {DebugResponse::TargetWheelVel2, "TargetWheelVel2"},
