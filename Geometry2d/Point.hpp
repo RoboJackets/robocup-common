@@ -175,7 +175,8 @@ public:
     }
 
     double& operator[](int i) {
-        return const_cast<double&>((static_cast<const Point*>(this))->operator[](i));
+        return const_cast<double&>(
+            (static_cast<const Point*>(this))->operator[](i));
     }
 
     /**
@@ -187,7 +188,6 @@ public:
         boost::hash_combine(seed, pt.y());
         return seed;
     }
-
 
     /**
     computes the dot product of this point and another.
