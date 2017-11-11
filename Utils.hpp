@@ -22,6 +22,12 @@ inline void debugLog(const std::exception& e) {
     std::cerr << e.what() << std::endl;
 }
 
+inline void debugLogIf(const std::string& e, bool condition) {
+    if (condition) {
+        debugLog(e);
+    }
+}
+
 template <class T,
           typename std::enable_if<std::is_base_of<std::exception, T>::value,
                                   int>::type = 0>
@@ -88,18 +94,6 @@ static Geometry2d::Point fromOursToTheirs(Geometry2d::Point& pt) {
 static bool ballIsInTheirGoalieBox(Geometry2d::Point& pt) {
     Geometry2d::Point converted = fromOursToTheirs(pt);
     return ballIsInGoalieBox(converted);
-}
-
-/** Returns @value if it is in bounds, otherwise returns the bound it is closest
- * to */
-template <class T>
-float clamp(T value, T min, T max) {
-    if (value > max) {
-        return max;
-    } else if (value < min) {
-        return min;
-    }
-    return value;
 }
 
 // Removes all entries in a std::map which associate to the given value.

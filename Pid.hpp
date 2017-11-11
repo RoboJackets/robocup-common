@@ -5,13 +5,11 @@
 
 class Pid {
 public:
+    Pid(float p = 0, float i = 0, float d = 0, unsigned int windup = 0, float dAlpha = 0);
 
-    Pid(float p = 0, float i = 0, float d = 0, unsigned int windup = 0);
+    float run(float err);
 
     unsigned int windup() const { return _windup; }
-
-    /** Runs the pid loop and returns the error */
-    float run(const float err);
 
     void setWindup(unsigned int w);
 
@@ -27,6 +25,9 @@ public:
 
 
     float kp, ki, kd;
+    float derivAlpha;
+
+    void set_saturated(bool is_saturated) { _saturated = is_saturated; }
 
 private:
 
@@ -35,11 +36,15 @@ private:
 
     unsigned int _windupLoc;
 
+    bool _saturated;
+
     float _errSum;
 
-    float _lastErr;
+    float _lastError;
 
-    std::vector<float> _oldErr;
+    float _lastDeriv;
+
+    std::vector<float> _oldErr{};
 
     std::unique_ptr <PidTuner> _tuner;
     void setFromTuner();

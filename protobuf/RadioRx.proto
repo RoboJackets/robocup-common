@@ -40,6 +40,12 @@ message Quaternion
 	required float q3 = 4;
 }
 
+message DebugResponses
+{
+    optional string key = 1;
+    optional float value = 2;
+}
+
 // Packet going out from radio program to control program
 message RadioRx
 {
@@ -62,4 +68,6 @@ message RadioRx
 	optional HardwareVersion hardware_version = 12 [default = Unknown];
 	
 	optional Quaternion quaternion = 13;
+
+	repeated DebugResponses debug_responses = 15;
 }
