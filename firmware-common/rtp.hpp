@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
 
 namespace rtp {
 
@@ -57,6 +58,7 @@ struct ControlMessage {
     unsigned triggerMode : 2;  // 0 = off, 1 = immediate, 2 = on break beam
 } __attribute__((packed));
 
+constexpr auto VELOCITY_SCALE_FACTOR = 1000;
 struct RobotStatusMessage {
     // uint8_t uid;
     uint8_t battVoltage;
