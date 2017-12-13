@@ -9,11 +9,12 @@ namespace rtp {
 enum MessageType : uint8_t {
     CONTROL = 0,
     ROBOT_STATUS,
+    PKT_ACK,
     DEBUG_REQUEST,
     DEBUG_RESPONSE,
     PING,
-    UPGRADE,
-    UPGRADE_CHECK
+    FILE,
+    FILE_CHECK
 };
 
 enum DebugVars : uint8_t {
@@ -36,15 +37,18 @@ constexpr uint8_t ANY_ROBOT_UID = 0xFF;
 struct MACInfo {
     uint8_t seqNum;
     uint8_t ackRequest;
+    uint8_t framePending;
     uint16_t srcAddr;
     uint16_t destPAN;
     uint16_t destAddr;
-    MACInfo() : seqNum(0), ackRequest(0), srcAddr(BROADCAST_ADDR),
-        destPAN(BROADCAST_PAN), destAddr(BROADCAST_ADDR) {}
+    MACInfo() : seqNum(0), ackRequest(0), framePending(0),
+        srcAddr(BROADCAST_ADDR), destPAN(BROADCAST_PAN),
+        destAddr(BROADCAST_ADDR) {}
 };
 
 struct Header {
     MessageType type;
+    uint16_t seqNum; // TODO: remove this is temporary and a waste
 } __attribute__((packed));
 
 struct ControlMessage {
@@ -78,7 +82,7 @@ struct DebutResponseMessage {
     uint8_t uid;
 } __attribute__((packed));
 
-struct UpgradeCheckMessage {
+struct FileCheckMessage {
     uint32_t chkSum;
     uint32_t filesize;
     char fileName[8];
