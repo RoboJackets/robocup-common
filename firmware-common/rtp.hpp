@@ -12,17 +12,18 @@ enum MessageType : uint8_t {
     PKT_ACK,
     DEBUG_REQUEST,
     DEBUG_RESPONSE,
-    PING,
-    FILE,
-    FILE_CHECK
+    PING
+    // FILE,
+    // FILE_CHECK
 };
 
-enum DebugVars : uint8_t {
+enum DebugVar : uint8_t {
     PID_ERROR,
     MOTOR_DUTY,
     WHEEL_VEL,
     STALL_COUNTER,
-    TARGET_WHEEL_VEL
+    TARGET_WHEEL_VEL,
+    TEST
 };
 
 constexpr uint16_t ROBOT_PAN = 0x0001;
@@ -44,11 +45,10 @@ struct MACInfo {
     MACInfo() : seqNum(0), ackRequest(0), framePending(0),
         srcAddr(BROADCAST_ADDR), destPAN(BROADCAST_PAN),
         destAddr(BROADCAST_ADDR) {}
-};
+} __attribute__((packed));
 
 struct Header {
     MessageType type;
-    uint16_t seqNum; // TODO: remove this is temporary and a waste
 } __attribute__((packed));
 
 struct ControlMessage {
@@ -72,26 +72,25 @@ struct RobotStatusMessage {
     unsigned fpgaStatus : 1;       // 0 = good, 1 = error
 } __attribute__((packed));
 
-struct DebutRequestMessage {
-    DebugVars debugVar;
-    uint8_t uid;
-} __attribute__((packed));
+struct DebugRequestMessage {
+    DebugVar debugType;
+};
 
-struct DebutResponseMessage {
-    DebugVars debugVar;
-    uint8_t uid;
-} __attribute__((packed));
+struct DebugResponseMessage {
+    DebugVar debugType;
+    float values[5];
+};
 
-struct FileCheckMessage {
-    uint32_t chkSum;
-    uint32_t filesize;
-    char fileName[8];
-    char fileExt[3];
-} __attribute__((packed));
+// struct FileCheckMessage {
+//     uint32_t chkSum;
+//     uint32_t filesize;
+//     char fileName[8];
+//     char fileExt[3];
+// } __attribute__((packed));
 
-class Packet {
+
+class SubPacket {
 public:
-    rtp::MACInfo macInfo;
     rtp::Header header;
     std::vector<uint8_t> payload;
     bool empty = true;
@@ -101,9 +100,40 @@ public:
     }
 
     void clear() {
-        macInfo = {};
         header = {};
         payload.clear();
+        empty = true;
+    }
+
+    static size_t messageSize(MessageType type) {
+        switch(type) {
+            case CONTROL: return sizeof(struct ControlMessage);
+            case ROBOT_STATUS: return sizeof(struct RobotStatusMessage);
+            case PKT_ACK: return 0;
+            case DEBUG_REQUEST: return sizeof(struct DebugRequestMessage);
+            case DEBUG_RESPONSE: return sizeof(struct DebugResponseMessage);
+            case PING: return 0;
+            default: return 0;
+        }
+    }
+};
+
+class Packet {
+public:
+    rtp::MACInfo macInfo;
+    std::vector<SubPacket> subPackets;
+    bool empty = true;
+
+    size_t size() const {
+        size_t size = 0;
+        for (auto i : subPackets) {
+            size += i.size();
+        }
+        return size;
+    }
+
+    void clear() {
+        subPackets.clear();
         empty = true;
     }
 };
