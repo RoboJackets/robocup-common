@@ -6,7 +6,6 @@ Class contained by Pid to automatically tune PID Coefficients
 */
 class PidTuner {
 public:
-
     /**
      *@brief Constructs a new PidTuner
      *@param ip The starting P value
@@ -16,7 +15,8 @@ public:
      *@param Si The step used for I
      *@param Sd The step used for D
      */
-    PidTuner(float ip, float ii, float id, float Sp = .1, float Si = .1, float Sd = .1);
+    PidTuner(float ip, float ii, float id, float Sp = .1, float Si = .1,
+             float Sd = .1);
 
     /** @brief Starts a cycle to test a PID value
      *  @details Call Once at the beginning of a test cycle
@@ -28,7 +28,8 @@ public:
      */
     void run(float err);
 
-    /** @brief Ends the test of a PID value, returns True if more tuning is needed
+    /** @brief Ends the test of a PID value, returns True if more tuning is
+     * needed
      *  @details Call Once at the end of a test cycle
      */
     bool endCycle();
@@ -38,15 +39,14 @@ public:
     float getD() { return _currentPid.d; }
 
 private:
-
-    //Struct to store P, I and D values and a score of the error
+    // Struct to store P, I and D values and a score of the error
     struct PidSet {
         PidSet(float ip = 0, float ii = 0, float id = 0);
         inline bool operator==(const PidSet& pidIn) {
             return (p == pidIn.p) && (i == pidIn.i) && (d == pidIn.d);
         }
         inline bool operator<(const PidSet& pidIn) {
-          return (score < pidIn.score);
+            return (score < pidIn.score);
         }
         float p;
         float i;
@@ -69,5 +69,5 @@ private:
 
     float _overScale;
 
-    std::vector <PidSet> _testSets;
+    std::vector<PidSet> _testSets;
 };
