@@ -30,8 +30,8 @@ struct Field_Dimensions {
     float GoalHeight() const { return _GoalHeight; }
 
     /** Distance of the penalty marker from the goal line */
-    float PenaltyDist() const { return _PenaltyDist; }
-    float PenaltyDiam() const { return _PenaltyDiam; }
+    float PenaltyShortDist() const { return _PenaltyShortDist; }
+    float PenaltyLongDist() const { return _PenaltyLongDist; }
 
     /** Radius of the goal arcs */
     float ArcRadius() const { return _ArcRadius; }
@@ -73,7 +73,7 @@ struct Field_Dimensions {
         : Field_Dimensions(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) {}
 
     Field_Dimensions(float fl, float fw, float fb, float flw, float gw,
-                     float gd, float gh, float pd, float pdiam, float ar,
+                     float gd, float gh, float psd, float pld, float ar,
                      float cr, float cd, float gf, float ffl, float ffw)
         : _Length(fl),
           _Width(fw),
@@ -82,8 +82,8 @@ struct Field_Dimensions {
           _GoalWidth(gw),
           _GoalDepth(gd),
           _GoalHeight(gh),
-          _PenaltyDist(pd),
-          _PenaltyDiam(pdiam),
+          _PenaltyShortDist(psd),
+          _PenaltyLongDist(pld),
           _ArcRadius(ar),
           _CenterRadius(cr),
           _CenterDiameter(cd),
@@ -97,7 +97,7 @@ struct Field_Dimensions {
         return Field_Dimensions(
             _Length * scalar, _Width * scalar, _Border * scalar,
             _LineWidth * scalar, _GoalWidth * scalar, _GoalDepth * scalar,
-            _GoalHeight * scalar, _PenaltyDist * scalar, _PenaltyDiam * scalar,
+            _GoalHeight * scalar, _PenaltyShortDist * scalar, _PenaltyLongDist * scalar,
             _ArcRadius * scalar, _CenterRadius * scalar,
             _CenterDiameter * scalar, _GoalFlat * scalar, _FloorLength * scalar,
             _FloorWidth * scalar);
@@ -111,8 +111,8 @@ struct Field_Dimensions {
                  std::abs(GoalWidth() - a.GoalWidth()) > FLT_EPSILON ||
                  std::abs(GoalDepth() - a.GoalDepth()) > FLT_EPSILON ||
                  std::abs(GoalHeight() - a.GoalHeight()) > FLT_EPSILON ||
-                 std::abs(PenaltyDist() - a.PenaltyDist()) > FLT_EPSILON ||
-                 std::abs(PenaltyDiam() - a.PenaltyDiam()) > FLT_EPSILON ||
+                 std::abs(PenaltyShortDist() - a.PenaltyShortDist()) > FLT_EPSILON ||
+                 std::abs(PenaltyLongDist() - a.PenaltyLongDist()) > FLT_EPSILON ||
                  std::abs(ArcRadius() - a.ArcRadius()) > FLT_EPSILON ||
                  std::abs(CenterRadius() - a.CenterRadius()) > FLT_EPSILON ||
                  std::abs(CenterDiameter() - a.CenterDiameter()) >
@@ -180,8 +180,8 @@ private:
     float _GoalWidth;
     float _GoalDepth;
     float _GoalHeight;
-    float _PenaltyDist;
-    float _PenaltyDiam;
+    float _PenaltyShortDist;
+    float _PenaltyLongDist;
     float _ArcRadius;
     float _CenterRadius;
     float _CenterDiameter;
