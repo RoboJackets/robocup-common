@@ -33,9 +33,6 @@ struct Field_Dimensions {
     float PenaltyShortDist() const { return _PenaltyShortDist; }
     float PenaltyLongDist() const { return _PenaltyLongDist; }
 
-    /** Radius of the goal arcs */
-    float ArcRadius() const { return _ArcRadius; }
-
     /** diameter of the center circle */
     float CenterRadius() const { return _CenterRadius; }
     float CenterDiameter() const { return _CenterDiameter; }
@@ -70,11 +67,11 @@ struct Field_Dimensions {
     static Field_Dimensions Current_Dimensions;
 
     Field_Dimensions()
-        : Field_Dimensions(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) {}
+        : Field_Dimensions(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) {}
 
     Field_Dimensions(float fl, float fw, float fb, float flw, float gw,
-                     float gd, float gh, float psd, float pld, float ar,
-                     float cr, float cd, float gf, float ffl, float ffw)
+                     float gd, float gh, float psd, float pld, float cr, 
+                     float cd, float gf, float ffl, float ffw)
         : _Length(fl),
           _Width(fw),
           _Border(fb),
@@ -84,7 +81,6 @@ struct Field_Dimensions {
           _GoalHeight(gh),
           _PenaltyShortDist(psd),
           _PenaltyLongDist(pld),
-          _ArcRadius(ar),
           _CenterRadius(cr),
           _CenterDiameter(cd),
           _GoalFlat(gf),
@@ -98,9 +94,8 @@ struct Field_Dimensions {
             _Length * scalar, _Width * scalar, _Border * scalar,
             _LineWidth * scalar, _GoalWidth * scalar, _GoalDepth * scalar,
             _GoalHeight * scalar, _PenaltyShortDist * scalar, _PenaltyLongDist * scalar,
-            _ArcRadius * scalar, _CenterRadius * scalar,
-            _CenterDiameter * scalar, _GoalFlat * scalar, _FloorLength * scalar,
-            _FloorWidth * scalar);
+            _CenterRadius * scalar, _CenterDiameter * scalar, 
+            _GoalFlat * scalar, _FloorLength * scalar, _FloorWidth * scalar);
     }
 
     bool operator==(const Field_Dimensions& a) const {
@@ -113,7 +108,6 @@ struct Field_Dimensions {
                  std::abs(GoalHeight() - a.GoalHeight()) > FLT_EPSILON ||
                  std::abs(PenaltyShortDist() - a.PenaltyShortDist()) > FLT_EPSILON ||
                  std::abs(PenaltyLongDist() - a.PenaltyLongDist()) > FLT_EPSILON ||
-                 std::abs(ArcRadius() - a.ArcRadius()) > FLT_EPSILON ||
                  std::abs(CenterRadius() - a.CenterRadius()) > FLT_EPSILON ||
                  std::abs(CenterDiameter() - a.CenterDiameter()) >
                      FLT_EPSILON ||
