@@ -29,7 +29,7 @@ struct Field_Dimensions {
     float GoalDepth() const { return _GoalDepth; }
     float GoalHeight() const { return _GoalHeight; }
 
-    /** Distance of the penalty marker from the goal line */
+    /** Dimensions of the rectangular penalty zone */
     float PenaltyShortDist() const { return _PenaltyShortDist; }
     float PenaltyLongDist() const { return _PenaltyLongDist; }
 
