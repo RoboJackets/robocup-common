@@ -63,11 +63,11 @@ static inline float fixAngleRadians(float a) {
 
 /** Checks whether or not the given ball is in the defense area. */
 static inline bool ballIsInGoalieBox(Geometry2d::Point point) {
-    Geometry2d::Point topRight = robocup.Point(
+    Geometry2d::Point topRight = Geometry2d::Point(
         Field_Dimensions::Current_Dimensions.PenaltyLongDist() / 2,
         Field_Dimensions::Current_Dimensions.PenaltyShortDist());
 
-    Geometry2d::Point bottomleft = robocup.Point(
+    Geometry2d::Point bottomLeft = Geometry2d::Point(
         Field_Dimensions::Current_Dimensions.PenaltyLongDist() / 2, 0);
 
     Geometry2d::Rect defenseArea = Geometry2d::Rect(topRight, bottomLeft);
