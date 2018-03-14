@@ -63,24 +63,16 @@ static inline float fixAngleRadians(float a) {
 
 /** Checks whether or not the given ball is in the defense area. */
 static inline bool ballIsInGoalieBox(Geometry2d::Point point) {
-    if (std::abs(point.x()) <
-        Field_Dimensions::Current_Dimensions.GoalFlat() / 2.0f) {
-        // Ball is in center (rectangular) portion of defensive bubble
-        return point.y() > 0 &&
-               point.y() < Field_Dimensions::Current_Dimensions.ArcRadius();
-    } else if (std::abs(point.x()) <
-               (Field_Dimensions::Current_Dimensions.ArcRadius() +
-                Field_Dimensions::Current_Dimensions.GoalFlat() / 2.0f)) {
-        // Ball is in one of the side (arc) portions of defensive bubble
-        double adjusted_x =
-            std::abs(point.x()) -
-            (Field_Dimensions::Current_Dimensions.GoalFlat() / 2.0f);
-        double max_y = sqrt((Field_Dimensions::Current_Dimensions.ArcRadius() *
-                             Field_Dimensions::Current_Dimensions.ArcRadius()) -
-                            (adjusted_x * adjusted_x));
-        return point.y() > 0 && point.y() <= max_y;
-    }
-    return false;
+    Geometry2d::Point topRight = Geometry2d::Point(
+        Field_Dimensions::Current_Dimensions.PenaltyLongDist() / 2,
+        Field_Dimensions::Current_Dimensions.PenaltyShortDist());
+
+    Geometry2d::Point bottomLeft = Geometry2d::Point(
+        Field_Dimensions::Current_Dimensions.PenaltyLongDist() / 2, 0);
+
+    Geometry2d::Rect defenseArea = Geometry2d::Rect(topRight, bottomLeft);
+
+    return defenseArea.containsPoint(point);
 }
 
 static Geometry2d::Point fromOursToTheirs(Geometry2d::Point& pt) {
