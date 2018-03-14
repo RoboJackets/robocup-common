@@ -122,22 +122,14 @@ struct Field_Dimensions {
         _CenterPoint = Geometry2d::Point(0.0, _Length / 2.0);
 
         _OurGoalZoneShape = Geometry2d::CompositeShape();
-        _OurGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(-_GoalFlat / 2.0, 0), _ArcRadius));
-        _OurGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(_GoalFlat / 2.0, 0), _ArcRadius));
         _OurGoalZoneShape.add(std::make_shared<Geometry2d::Rect>(
-            Geometry2d::Point(-_GoalFlat / 2.0, _ArcRadius),
-            Geometry2d::Point(_GoalFlat / 2.0, 0)));
+          Geometry2d::Point(-_PenaltyLongDist / 2, 0), 
+          Geometry2d::Point(_PenaltyLongDist / 2, _PenaltyShortDist)));
 
         _TheirGoalZoneShape = Geometry2d::CompositeShape();
-        _TheirGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(-_GoalFlat / 2.0, _Length), _ArcRadius));
-        _TheirGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(_GoalFlat / 2.0, _Length), _ArcRadius));
         _TheirGoalZoneShape.add(std::make_shared<Geometry2d::Rect>(
-            Geometry2d::Point(-_GoalFlat / 2.0, _Length),
-            Geometry2d::Point(_GoalFlat / 2.0, _Length - _ArcRadius)));
+            Geometry2d::Point(-_PenaltyLongDist / 2, _Length),
+            Geometry2d::Point(_PenaltyLongDist / 2, _Length - _PenaltyShortDist)));
 
         _TheirGoalSegment =
             Geometry2d::Segment(Geometry2d::Point(_GoalWidth / 2.0, _Length),
