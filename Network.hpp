@@ -56,4 +56,3 @@ static const int SharedVisionPortDoubleNew = 10006;
 
 static const int RadioRxPort = 12000;
 static const int RadioTxPort = 13000;
-

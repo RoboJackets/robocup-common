@@ -16,6 +16,7 @@ set(COMMON_SRC
     "multicast.cpp"
     "Pid.cpp"
     "pidTuner.cpp"
+    "RobotModel.cpp"
     "Utils.cpp"
 )
 
@@ -34,7 +35,7 @@ if(APPLE)
     # look for the homebrew-installed version of Qt5
     find_package(Qt5Widgets
         REQUIRED
-        PATHS /usr/local/Cellar/qt5/*)
+        PATHS /usr/local/Cellar/qt/* /usr/local/Cellar/qt5/*)
 
     # this directory is included by default, but we mark it as SYSTEM so
     # warnings in external headers don't show up every time we build
@@ -49,7 +50,7 @@ qt5_use_modules(common Core Network Widgets)
 # write git_version.cpp with the current git SHA and dirty status
 # see http://www.cmake.org/pipermail/cmake/2010-July/038015.html
 find_package(Git REQUIRED)
-file(WRITE ${CMAKE_BINARY_DIR}/git_version.cpp.in
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/git_version.cpp.in
     "#include <git_version.hpp>\n"
     "const char *git_version_hash = \"@GIT_HASH@\";\n"
     "const char *git_version_short_hash = \"@GIT_SHORT_HASH@\";\n"
@@ -96,8 +97,8 @@ file(WRITE ${CMAKE_BINARY_DIR}/version.cmake
 # It'd be nice if CMake had a way to do this as a single custom command/target, but since it doesn't,
 # this is the workaround.
 add_custom_target(git_version
-    ${CMAKE_COMMAND} -D SRC=${CMAKE_BINARY_DIR}/git_version.cpp.in
-                     -D DST=${CMAKE_BINARY_DIR}/common/git_version.cpp
+    ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_BINARY_DIR}/git_version.cpp.in
+                     -D DST=${CMAKE_CURRENT_BINARY_DIR}/git_version.cpp
                      -P ${CMAKE_BINARY_DIR}/version.cmake
     COMMENT "Generating git version c++ file"
 )
