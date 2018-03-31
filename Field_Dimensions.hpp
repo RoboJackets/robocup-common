@@ -29,12 +29,9 @@ struct Field_Dimensions {
     float GoalDepth() const { return _GoalDepth; }
     float GoalHeight() const { return _GoalHeight; }
 
-    /** Distance of the penalty marker from the goal line */
-    float PenaltyDist() const { return _PenaltyDist; }
-    float PenaltyDiam() const { return _PenaltyDiam; }
-
-    /** Radius of the goal arcs */
-    float ArcRadius() const { return _ArcRadius; }
+    /** Dimensions of the rectangular penalty zone */
+    float PenaltyShortDist() const { return _PenaltyShortDist; }
+    float PenaltyLongDist() const { return _PenaltyLongDist; }
 
     /** diameter of the center circle */
     float CenterRadius() const { return _CenterRadius; }
@@ -70,11 +67,11 @@ struct Field_Dimensions {
     static Field_Dimensions Current_Dimensions;
 
     Field_Dimensions()
-        : Field_Dimensions(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) {}
+        : Field_Dimensions(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) {}
 
     Field_Dimensions(float fl, float fw, float fb, float flw, float gw,
-                     float gd, float gh, float pd, float pdiam, float ar,
-                     float cr, float cd, float gf, float ffl, float ffw)
+                     float gd, float gh, float psd, float pld, float cr, 
+                     float cd, float gf, float ffl, float ffw)
         : _Length(fl),
           _Width(fw),
           _Border(fb),
@@ -82,9 +79,8 @@ struct Field_Dimensions {
           _GoalWidth(gw),
           _GoalDepth(gd),
           _GoalHeight(gh),
-          _PenaltyDist(pd),
-          _PenaltyDiam(pdiam),
-          _ArcRadius(ar),
+          _PenaltyShortDist(psd),
+          _PenaltyLongDist(pld),
           _CenterRadius(cr),
           _CenterDiameter(cd),
           _GoalFlat(gf),
@@ -97,10 +93,9 @@ struct Field_Dimensions {
         return Field_Dimensions(
             _Length * scalar, _Width * scalar, _Border * scalar,
             _LineWidth * scalar, _GoalWidth * scalar, _GoalDepth * scalar,
-            _GoalHeight * scalar, _PenaltyDist * scalar, _PenaltyDiam * scalar,
-            _ArcRadius * scalar, _CenterRadius * scalar,
-            _CenterDiameter * scalar, _GoalFlat * scalar, _FloorLength * scalar,
-            _FloorWidth * scalar);
+            _GoalHeight * scalar, _PenaltyShortDist * scalar, _PenaltyLongDist * scalar,
+            _CenterRadius * scalar, _CenterDiameter * scalar, 
+            _GoalFlat * scalar, _FloorLength * scalar, _FloorWidth * scalar);
     }
 
     bool operator==(const Field_Dimensions& a) const {
@@ -111,9 +106,8 @@ struct Field_Dimensions {
                  std::abs(GoalWidth() - a.GoalWidth()) > FLT_EPSILON ||
                  std::abs(GoalDepth() - a.GoalDepth()) > FLT_EPSILON ||
                  std::abs(GoalHeight() - a.GoalHeight()) > FLT_EPSILON ||
-                 std::abs(PenaltyDist() - a.PenaltyDist()) > FLT_EPSILON ||
-                 std::abs(PenaltyDiam() - a.PenaltyDiam()) > FLT_EPSILON ||
-                 std::abs(ArcRadius() - a.ArcRadius()) > FLT_EPSILON ||
+                 std::abs(PenaltyShortDist() - a.PenaltyShortDist()) > FLT_EPSILON ||
+                 std::abs(PenaltyLongDist() - a.PenaltyLongDist()) > FLT_EPSILON ||
                  std::abs(CenterRadius() - a.CenterRadius()) > FLT_EPSILON ||
                  std::abs(CenterDiameter() - a.CenterDiameter()) >
                      FLT_EPSILON ||
@@ -128,22 +122,14 @@ struct Field_Dimensions {
         _CenterPoint = Geometry2d::Point(0.0, _Length / 2.0);
 
         _OurGoalZoneShape = Geometry2d::CompositeShape();
-        _OurGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(-_GoalFlat / 2.0, 0), _ArcRadius));
-        _OurGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(_GoalFlat / 2.0, 0), _ArcRadius));
         _OurGoalZoneShape.add(std::make_shared<Geometry2d::Rect>(
-            Geometry2d::Point(-_GoalFlat / 2.0, _ArcRadius),
-            Geometry2d::Point(_GoalFlat / 2.0, 0)));
+          Geometry2d::Point(-_PenaltyLongDist / 2, 0), 
+          Geometry2d::Point(_PenaltyLongDist / 2, _PenaltyShortDist)));
 
         _TheirGoalZoneShape = Geometry2d::CompositeShape();
-        _TheirGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(-_GoalFlat / 2.0, _Length), _ArcRadius));
-        _TheirGoalZoneShape.add(std::make_shared<Geometry2d::Circle>(
-            Geometry2d::Point(_GoalFlat / 2.0, _Length), _ArcRadius));
         _TheirGoalZoneShape.add(std::make_shared<Geometry2d::Rect>(
-            Geometry2d::Point(-_GoalFlat / 2.0, _Length),
-            Geometry2d::Point(_GoalFlat / 2.0, _Length - _ArcRadius)));
+            Geometry2d::Point(-_PenaltyLongDist / 2, _Length),
+            Geometry2d::Point(_PenaltyLongDist / 2, _Length - _PenaltyShortDist)));
 
         _TheirGoalSegment =
             Geometry2d::Segment(Geometry2d::Point(_GoalWidth / 2.0, _Length),
@@ -180,8 +166,8 @@ private:
     float _GoalWidth;
     float _GoalDepth;
     float _GoalHeight;
-    float _PenaltyDist;
-    float _PenaltyDiam;
+    float _PenaltyShortDist;
+    float _PenaltyLongDist;
     float _ArcRadius;
     float _CenterRadius;
     float _CenterDiameter;

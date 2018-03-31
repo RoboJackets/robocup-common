@@ -343,7 +343,8 @@ public:
 
     /** returns the angle between the two normalized points (radians) */
     double angleBetween(const Point& other) const {
-        return acos(normalized().dot(other.normalized()));
+        double angle = normalized().dot(other.normalized());
+        return acos(std::max(std::min(angle, 1.0), -1.0));
     }
 
     bool nearlyEquals(Point other) const;

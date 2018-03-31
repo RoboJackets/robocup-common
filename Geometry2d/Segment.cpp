@@ -96,10 +96,10 @@ bool Segment::nearPoint(const Point& point, float threshold) const {
 Point Segment::nearestPoint(const Point& p) const {
     // http://stackoverflow.com/a/1501725
 
-    const float magsq = delta().magsq();
+    const double magsq = delta().magsq();
     if (magsq == 0) return pt[0];
 
-    float t = delta().dot(p - pt[0]) / magsq;
+    const double t = delta().dot(p - pt[0]) / magsq;
 
     if (t <= 0) {
         return pt[0];
