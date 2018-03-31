@@ -23,6 +23,12 @@ set(COMMON_SRC
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+# Eigen - used for linear algebra
+find_package(Eigen3 REQUIRED)
+
+# include Eigen3 for linear algebra
+include_directories(${EIGEN_INCLUDE_DIR})
+
 # positon-independent-code flag
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
