@@ -16,6 +16,7 @@ set(COMMON_SRC
     "multicast.cpp"
     "Pid.cpp"
     "pidTuner.cpp"
+    "RobotModel.cpp"
     "Utils.cpp"
 )
 
