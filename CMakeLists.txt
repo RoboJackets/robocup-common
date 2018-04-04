@@ -46,6 +46,9 @@ else()
 endif()
 qt5_use_modules(common Core Network Widgets)
 
+# Eigen - used for linear algebra
+find_package(Eigen3 REQUIRED)
+include_directories(SYSTEM ${EIGEN_INCLUDE_DIR})
 
 # write git_version.cpp with the current git SHA and dirty status
 # see http://www.cmake.org/pipermail/cmake/2010-July/038015.html
